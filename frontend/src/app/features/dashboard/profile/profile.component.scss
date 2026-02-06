@@ -1,0 +1,191 @@
+/* ==========================================================================
+   Profile Component Styles
+   ========================================================================== */
+
+.profile-page {
+  max-width: 800px;
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   Error container
+   -------------------------------------------------------------------------- */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+/* --------------------------------------------------------------------------
+   Profile info card
+   -------------------------------------------------------------------------- */
+:host ::ng-deep .profile-card {
+  margin-bottom: 1.5rem;
+
+  .p-card-body {
+    padding: 1.5rem;
+  }
+}
+
+.profile-info {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  i {
+    font-size: 2rem;
+    color: #fff;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Info grid
+   -------------------------------------------------------------------------- */
+.info-grid {
+  flex: 1;
+  min-width: 0;
+}
+
+.info-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-color);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.info-label {
+  width: 140px;
+  min-width: 140px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-color-secondary);
+}
+
+.info-value {
+  flex: 1;
+  font-size: 0.95rem;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* --------------------------------------------------------------------------
+   Username editing
+   -------------------------------------------------------------------------- */
+.username-display {
+  font-weight: 500;
+}
+
+.username-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.username-input {
+  width: 100%;
+  max-width: 300px;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   Password change fieldset
+   -------------------------------------------------------------------------- */
+:host ::ng-deep .password-fieldset {
+  margin-top: 1.5rem;
+
+  .p-fieldset-legend {
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .p-fieldset-content {
+    padding: 1.25rem 0 0;
+  }
+}
+
+/* Form fields */
+.field {
+  margin-bottom: 1.25rem;
+
+  label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+  }
+}
+
+.p-error {
+  display: block;
+  margin-top: 0.25rem;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .profile-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .info-row {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .info-label {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .info-value {
+    justify-content: center;
+  }
+
+  .username-edit {
+    align-items: center;
+  }
+
+  .edit-actions {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.5rem;
+  }
+}

@@ -1,0 +1,35 @@
+<!-- Page header -->
+<app-header />
+
+<main class="about-page">
+  <!-- Page title -->
+  <section class="page-header">
+    <h1>Chi siamo</h1>
+  </section>
+
+  <!-- Loading state -->
+  @if (loading) {
+    <app-loading-spinner />
+  }
+
+  <!-- Error state -->
+  @if (errorMessage && !loading) {
+    <div class="error-message">
+      <i class="pi pi-exclamation-triangle"></i>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
+  <!-- CMS content -->
+  @if (page && !loading) {
+    <section class="content-section">
+      @if (page.title) {
+        <h2 class="content-title">{{ page.title }}</h2>
+      }
+      <div class="cms-content" [innerHTML]="page.contentHtml"></div>
+    </section>
+  }
+</main>
+
+<!-- Page footer -->
+<app-footer />

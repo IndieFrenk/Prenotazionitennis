@@ -1,0 +1,435 @@
+/* Court booking calendar page styles */
+
+.court-booking-page {
+  flex: 1;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1.5rem 3rem;
+  width: 100%;
+}
+
+/* Back navigation */
+.back-nav {
+  margin-bottom: 0.5rem;
+}
+
+/* Court info header */
+.court-info-header {
+  padding-top: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.court-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0;
+  }
+}
+
+.court-meta {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-color-secondary);
+  font-size: 0.95rem;
+
+  i {
+    color: var(--primary-color);
+    font-size: 0.9rem;
+  }
+}
+
+.original-price {
+  text-decoration: line-through;
+  opacity: 0.6;
+  margin-left: 0.25rem;
+}
+
+/* Date navigation */
+.date-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.date-picker-wrapper {
+  :host ::ng-deep .p-calendar {
+    .p-inputtext {
+      text-align: center;
+      font-weight: 600;
+      font-size: 1rem;
+      min-width: 160px;
+    }
+  }
+}
+
+/* Selected date label */
+.selected-date-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+/* Schedule section */
+.schedule-section {
+  margin-bottom: 1.5rem;
+}
+
+.schedule-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+}
+
+/* Time slots grid */
+.slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+
+/* Individual time slot */
+.slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0.75rem;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  text-align: center;
+  min-height: 90px;
+}
+
+.slot-time {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.slot-status {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03rem;
+}
+
+.slot-action {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  margin-top: 0.35rem;
+  font-weight: 500;
+}
+
+/* Slot states */
+.slot-available {
+  background-color: rgba(76, 175, 80, 0.08);
+  border-color: rgba(76, 175, 80, 0.3);
+  color: var(--text-color);
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(76, 175, 80, 0.18);
+    border-color: rgba(76, 175, 80, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+  }
+
+  .slot-status {
+    color: #2e7d32;
+  }
+
+  .slot-action {
+    color: #2e7d32;
+  }
+}
+
+.slot-occupied {
+  background-color: var(--surface-100, #f5f5f5);
+  border-color: var(--surface-200, #e0e0e0);
+  color: var(--text-color-secondary);
+  cursor: not-allowed;
+  opacity: 0.75;
+
+  .slot-status {
+    color: var(--text-color-secondary);
+  }
+}
+
+.slot-past {
+  background-color: var(--surface-50, #fafafa);
+  border-color: var(--surface-100, #f0f0f0);
+  color: var(--text-color-secondary);
+  cursor: not-allowed;
+  opacity: 0.5;
+
+  .slot-status {
+    color: var(--text-color-secondary);
+  }
+}
+
+/* Empty schedule */
+.empty-schedule {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  color: var(--text-color-secondary);
+
+  i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 1.05rem;
+    margin: 0 0 1rem 0;
+  }
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--surface-border);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--text-color-secondary);
+}
+
+.legend-color {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  border: 2px solid transparent;
+}
+
+.legend-available {
+  background-color: rgba(76, 175, 80, 0.15);
+  border-color: rgba(76, 175, 80, 0.4);
+}
+
+.legend-occupied {
+  background-color: var(--surface-100, #f5f5f5);
+  border-color: var(--surface-200, #e0e0e0);
+}
+
+.legend-past {
+  background-color: var(--surface-50, #fafafa);
+  border-color: var(--surface-100, #f0f0f0);
+  opacity: 0.5;
+}
+
+/* Error state */
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+
+  i {
+    font-size: 4rem;
+    color: var(--text-color-secondary);
+    opacity: 0.5;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    color: var(--text-color-secondary);
+    margin: 0 0 1.5rem 0;
+  }
+}
+
+/* Booking dialog content */
+.booking-dialog-content {
+  padding: 0.5rem 0;
+}
+
+.booking-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.summary-label {
+  color: var(--text-color-secondary);
+  font-size: 0.9rem;
+}
+
+.summary-value {
+  font-weight: 500;
+  color: var(--text-color);
+  font-size: 0.95rem;
+}
+
+.summary-price {
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--surface-border);
+}
+
+.price-highlight {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.member-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: rgba(76, 175, 80, 0.08);
+  color: #2e7d32;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+
+  i {
+    font-size: 0.9rem;
+    color: #f9a825;
+  }
+}
+
+/* Booking form */
+.booking-form {
+  margin-bottom: 0.5rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--text-color);
+  }
+
+  textarea {
+    width: 100%;
+  }
+}
+
+/* Dialog actions */
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .court-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .court-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .slots-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .slot {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    min-height: auto;
+  }
+
+  .slot-time {
+    margin-bottom: 0;
+  }
+
+  .slot-action {
+    margin-top: 0;
+  }
+
+  .legend {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .date-navigation {
+    gap: 0.5rem;
+  }
+
+  .dialog-actions {
+    flex-direction: column-reverse;
+
+    :host ::ng-deep .p-button {
+      width: 100%;
+    }
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .slots-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

@@ -1,0 +1,282 @@
+/* ==========================================================================
+   Admin Dashboard Overview Styles
+   ========================================================================== */
+
+$mobile-breakpoint: 768px;
+$tablet-breakpoint: 1024px;
+
+/* --------------------------------------------------------------------------
+   Page header
+   -------------------------------------------------------------------------- */
+.page-header {
+  margin-bottom: 1.5rem;
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0 0 0.25rem;
+  }
+
+  .page-subtitle {
+    font-size: 0.95rem;
+    color: var(--text-color-secondary);
+    margin: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Filters bar
+   -------------------------------------------------------------------------- */
+.filters-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1rem 1.25rem;
+  background: var(--surface-color);
+  border-radius: var(--border-radius, 8px);
+  border: 1px solid var(--border-color);
+}
+
+.quick-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.date-picker {
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Loading state
+   -------------------------------------------------------------------------- */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1rem;
+
+  p {
+    color: var(--text-color-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Stats summary cards grid
+   -------------------------------------------------------------------------- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+:host ::ng-deep .stat-card {
+  .p-card-body {
+    padding: 1.25rem;
+  }
+
+  .p-card-content {
+    padding: 0;
+  }
+}
+
+.stat-card-body {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stat-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  i {
+    font-size: 1.5rem;
+    color: #fff;
+  }
+
+  &--reservations {
+    background: linear-gradient(135deg, #2e7d32, #4caf50);
+  }
+
+  &--week {
+    background: linear-gradient(135deg, #1565c0, #42a5f5);
+  }
+
+  &--month {
+    background: linear-gradient(135deg, #e65100, #ff9800);
+  }
+
+  &--revenue {
+    background: linear-gradient(135deg, #6a1b9a, #ab47bc);
+  }
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-color-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-color);
+  line-height: 1.2;
+
+  &--currency {
+    font-size: 1.5rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Chart section
+   -------------------------------------------------------------------------- */
+.chart-section {
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0 0 1rem;
+  }
+}
+
+.chart-container {
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius, 8px);
+  padding: 1.5rem;
+  height: 400px;
+
+  :host ::ng-deep canvas {
+    max-height: 100%;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Table section
+   -------------------------------------------------------------------------- */
+.table-section {
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0 0 1rem;
+  }
+}
+
+.table-summary {
+  font-size: 0.9rem;
+  color: var(--text-color-secondary);
+  padding: 0.5rem 0;
+}
+
+/* --------------------------------------------------------------------------
+   Empty state
+   -------------------------------------------------------------------------- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius, 8px);
+  gap: 0.75rem;
+
+  i {
+    font-size: 2.5rem;
+    color: var(--text-color-secondary);
+  }
+
+  p {
+    color: var(--text-color-secondary);
+    font-size: 1rem;
+    margin: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive: tablet
+   -------------------------------------------------------------------------- */
+@media (max-width: $tablet-breakpoint) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive: mobile
+   -------------------------------------------------------------------------- */
+@media (max-width: $mobile-breakpoint) {
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .filters-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .quick-filters {
+    justify-content: center;
+  }
+
+  .date-picker {
+    width: 100%;
+
+    :host ::ng-deep .p-calendar {
+      width: 100%;
+
+      .p-inputtext {
+        width: 100%;
+      }
+    }
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+
+    &--currency {
+      font-size: 1.25rem;
+    }
+  }
+
+  .chart-container {
+    height: 300px;
+    padding: 1rem;
+  }
+}

@@ -1,0 +1,256 @@
+/* ==========================================================================
+   Admin Page Edit Styles
+   ========================================================================== */
+
+$mobile-breakpoint: 768px;
+$tablet-breakpoint: 1024px;
+
+/* --------------------------------------------------------------------------
+   Page header
+   -------------------------------------------------------------------------- */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  &__left {
+    flex: 1;
+    min-width: 0;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0 0 0.25rem;
+  }
+
+  .page-subtitle {
+    font-size: 0.95rem;
+    color: var(--text-color-secondary);
+    margin: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Loading state
+   -------------------------------------------------------------------------- */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1rem;
+
+  p {
+    color: var(--text-color-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Slug info
+   -------------------------------------------------------------------------- */
+.slug-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.slug-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-color-secondary);
+}
+
+/* Slug tag monospace styling */
+:host ::ng-deep .slug-tag {
+  .p-tag-value {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.85rem;
+    letter-spacing: 0.025em;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Form card
+   -------------------------------------------------------------------------- */
+:host ::ng-deep .form-card {
+  margin-bottom: 1.5rem;
+
+  .p-card-body {
+    padding: 1.5rem;
+  }
+
+  .p-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Form grid layout
+   -------------------------------------------------------------------------- */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-color);
+  }
+
+  input,
+  textarea {
+    width: 100%;
+  }
+
+  .p-error {
+    font-size: 0.8rem;
+  }
+
+  /* Full-width field spanning all columns */
+  &--full {
+    grid-column: 1 / -1;
+  }
+}
+
+/* HTML content textarea with monospace font */
+.content-textarea {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* --------------------------------------------------------------------------
+   Form action buttons
+   -------------------------------------------------------------------------- */
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-color);
+}
+
+/* --------------------------------------------------------------------------
+   Preview container
+   -------------------------------------------------------------------------- */
+.preview-container {
+  min-height: 300px;
+}
+
+.preview-content {
+  padding: 1.5rem;
+  background: var(--surface-ground, #f8f9fa);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius, 8px);
+  line-height: 1.6;
+  color: var(--text-color);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+
+  /* Basic typography for rendered HTML */
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    color: var(--text-color);
+  }
+
+  p {
+    margin: 0 0 1rem;
+  }
+
+  ul, ol {
+    margin: 0 0 1rem;
+    padding-left: 1.5rem;
+  }
+
+  a {
+    color: var(--primary-color);
+    text-decoration: underline;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+
+    th, td {
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+    }
+
+    th {
+      background: var(--surface-color);
+      font-weight: 600;
+    }
+  }
+}
+
+/* Empty preview state */
+.preview-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1rem;
+
+  i {
+    font-size: 2.5rem;
+    color: var(--text-color-secondary);
+  }
+
+  p {
+    color: var(--text-color-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+    text-align: center;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive: mobile
+   -------------------------------------------------------------------------- */
+@media (max-width: $mobile-breakpoint) {
+  .page-header {
+    flex-direction: column;
+
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+
+    button {
+      width: 100%;
+    }
+  }
+}

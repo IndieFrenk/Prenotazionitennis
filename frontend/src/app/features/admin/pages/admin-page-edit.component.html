@@ -1,0 +1,116 @@
+<!-- Admin Page Edit -->
+<p-toast />
+
+<div class="admin-page-edit">
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="page-header__left">
+      <h1>Modifica Pagina</h1>
+      <p class="page-subtitle">Modifica il titolo e il contenuto HTML della pagina</p>
+    </div>
+    <button
+      pButton
+      type="button"
+      label="Torna alla lista"
+      icon="pi pi-arrow-left"
+      class="p-button-outlined"
+      (click)="goBack()"
+    ></button>
+  </div>
+
+  <!-- Loading spinner -->
+  @if (loading) {
+    <div class="loading-container">
+      <p-progressSpinner strokeWidth="4" animationDuration="1s" />
+      <p>Caricamento pagina...</p>
+    </div>
+  }
+
+  <!-- Form (visible when not loading) -->
+  @if (!loading && page) {
+    <!-- Slug info badge -->
+    <div class="slug-info">
+      <span class="slug-label">Slug:</span>
+      <p-tag [value]="slug" severity="info" styleClass="slug-tag" />
+    </div>
+
+    <!-- Tabbed editor / preview -->
+    <p-tabView>
+      <!-- Tab: Modifica -->
+      <p-tabPanel header="Modifica" leftIcon="pi pi-pencil">
+        <form [formGroup]="pageForm" (ngSubmit)="save()" class="page-form">
+          <p-card styleClass="form-card">
+            <div class="form-grid">
+              <!-- Title -->
+              <div class="form-field form-field--full">
+                <label for="title">Titolo *</label>
+                <input
+                  id="title"
+                  type="text"
+                  pInputText
+                  formControlName="title"
+                  placeholder="Titolo della pagina"
+                  [class.ng-invalid]="isInvalid('title')"
+                />
+                @if (isInvalid('title')) {
+                  <small class="p-error">Il titolo e obbligatorio.</small>
+                }
+              </div>
+
+              <!-- Content HTML -->
+              <div class="form-field form-field--full">
+                <label for="contentHtml">Contenuto HTML</label>
+                <textarea
+                  id="contentHtml"
+                  pInputTextarea
+                  formControlName="contentHtml"
+                  [rows]="20"
+                  placeholder="Inserisci il contenuto HTML della pagina"
+                  [autoResize]="false"
+                  class="content-textarea"
+                ></textarea>
+              </div>
+            </div>
+
+            <!-- Form action buttons -->
+            <div class="form-actions">
+              <button
+                pButton
+                type="button"
+                label="Annulla"
+                icon="pi pi-times"
+                class="p-button-outlined"
+                severity="secondary"
+                (click)="goBack()"
+              ></button>
+              <button
+                pButton
+                type="submit"
+                label="Salva"
+                icon="pi pi-check"
+                severity="success"
+                [loading]="saving"
+              ></button>
+            </div>
+          </p-card>
+        </form>
+      </p-tabPanel>
+
+      <!-- Tab: Anteprima -->
+      <p-tabPanel header="Anteprima" leftIcon="pi pi-eye">
+        <p-card styleClass="form-card">
+          <div class="preview-container">
+            @if (previewHtml) {
+              <div class="preview-content" [innerHTML]="previewHtml"></div>
+            } @else {
+              <div class="preview-empty">
+                <i class="pi pi-eye-slash"></i>
+                <p>Nessun contenuto da visualizzare. Inserisci del contenuto HTML nella tab "Modifica".</p>
+              </div>
+            }
+          </div>
+        </p-card>
+      </p-tabPanel>
+    </p-tabView>
+  }
+</div>

@@ -1,0 +1,101 @@
+<!-- Page header -->
+<app-header />
+
+<main class="login-page">
+  <div class="login-container">
+    <p-card styleClass="login-card">
+      <!-- Card header -->
+      <ng-template pTemplate="header">
+        <div class="card-header">
+          <i class="pi pi-sign-in"></i>
+          <h1>Accedi</h1>
+          <p>Inserisci le tue credenziali per accedere</p>
+        </div>
+      </ng-template>
+
+      <!-- Error message -->
+      @if (errorMessage) {
+        <p-message severity="error" [text]="errorMessage" styleClass="w-full mb-3" />
+        @if (showResendVerification) {
+          <div class="resend-verification-link">
+            <a routerLink="/auth/reinvia-verifica">Richiedi un nuovo link di verifica</a>
+          </div>
+        }
+      }
+
+      <!-- Login form -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Email field -->
+        <div class="field">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            pInputText
+            formControlName="email"
+            placeholder="La tua email"
+            [class.ng-invalid]="isFieldInvalid('email')"
+            [class.ng-dirty]="isFieldInvalid('email')"
+          />
+          @if (isFieldInvalid('email')) {
+            <small class="p-error">
+              @if (loginForm.get('email')?.hasError('required')) {
+                L'email è obbligatoria.
+              } @else if (loginForm.get('email')?.hasError('email')) {
+                Inserisci un indirizzo email valido.
+              }
+            </small>
+          }
+        </div>
+
+        <!-- Password field -->
+        <div class="field">
+          <label for="password">Password</label>
+          <p-password
+            id="password"
+            formControlName="password"
+            placeholder="La tua password"
+            [feedback]="false"
+            [toggleMask]="true"
+            styleClass="w-full"
+            inputStyleClass="w-full"
+            [class.ng-invalid]="isFieldInvalid('password')"
+            [class.ng-dirty]="isFieldInvalid('password')"
+          />
+          @if (isFieldInvalid('password')) {
+            <small class="p-error">
+              La password è obbligatoria.
+            </small>
+          }
+        </div>
+
+        <!-- Forgot password link -->
+        <div class="forgot-password-link">
+          <a routerLink="/recupera-password">Hai dimenticato la password?</a>
+        </div>
+
+        <!-- Submit button -->
+        <p-button
+          type="submit"
+          label="Accedi"
+          icon="pi pi-sign-in"
+          severity="primary"
+          styleClass="w-full"
+          [loading]="submitting"
+          [disabled]="submitting"
+        />
+      </form>
+
+      <!-- Register link -->
+      <ng-template pTemplate="footer">
+        <div class="register-link">
+          <span>Non hai un account?</span>
+          <a routerLink="/registrazione">Registrati</a>
+        </div>
+      </ng-template>
+    </p-card>
+  </div>
+</main>
+
+<!-- Page footer -->
+<app-footer />

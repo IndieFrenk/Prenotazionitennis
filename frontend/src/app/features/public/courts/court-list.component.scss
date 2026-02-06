@@ -1,0 +1,169 @@
+/* Court list page styles */
+
+.court-list-page {
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem 3rem;
+  width: 100%;
+}
+
+/* Page header */
+.page-header {
+  text-align: center;
+  padding: 2.5rem 0 1.5rem;
+
+  h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: var(--text-color-secondary);
+    margin: 0;
+  }
+}
+
+/* Filter section */
+.filter-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+/* Courts grid */
+.courts-grid {
+  margin-bottom: 2rem;
+}
+
+/* Court card */
+:host ::ng-deep .court-card {
+  height: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .p-card-header {
+    padding: 0;
+  }
+}
+
+.court-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  height: 200px;
+}
+
+.court-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.type-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+}
+
+.court-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0 0 0.5rem 0;
+}
+
+.court-description {
+  color: var(--text-color-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0 0 1rem 0;
+  min-height: 2.7rem;
+}
+
+/* Price display */
+.court-prices {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--surface-border);
+}
+
+.price-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.price-label {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03rem;
+}
+
+.price-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.price-member {
+  color: var(--primary-color);
+}
+
+/* Card action buttons */
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+/* Empty state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: var(--text-color-secondary);
+
+  i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 1.1rem;
+    margin: 0;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .court-prices {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .card-actions {
+    flex-direction: column;
+
+    :host ::ng-deep .p-button {
+      width: 100%;
+    }
+  }
+}

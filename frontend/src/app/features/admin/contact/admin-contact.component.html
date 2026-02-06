@@ -1,0 +1,151 @@
+<!-- Admin Contact Information -->
+<p-toast />
+
+<div class="admin-contact">
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="page-header__left">
+      <h1>Gestione Contatti</h1>
+      <p class="page-subtitle">Modifica le informazioni di contatto e la posizione del club</p>
+    </div>
+  </div>
+
+  <!-- Loading spinner -->
+  @if (loading) {
+    <div class="loading-container">
+      <p-progressSpinner strokeWidth="4" animationDuration="1s" />
+      <p>Caricamento informazioni di contatto...</p>
+    </div>
+  }
+
+  <!-- Form (visible when not loading) -->
+  @if (!loading) {
+    <form [formGroup]="contactForm" (ngSubmit)="save()" class="contact-form">
+      <!-- General contact info card -->
+      <p-card header="Informazioni generali" styleClass="form-card">
+        <div class="form-grid">
+          <!-- Address -->
+          <div class="form-field form-field--full">
+            <label for="address">Indirizzo</label>
+            <input
+              id="address"
+              type="text"
+              pInputText
+              formControlName="address"
+              placeholder="Es. Via Roma 1, 20100 Milano (MI)"
+            />
+          </div>
+
+          <!-- Phone -->
+          <div class="form-field">
+            <label for="phone">Telefono</label>
+            <input
+              id="phone"
+              type="text"
+              pInputText
+              formControlName="phone"
+              placeholder="Es. +39 02 1234567"
+            />
+          </div>
+
+          <!-- Email -->
+          <div class="form-field">
+            <label for="email">Email</label>
+            <input
+              id="email"
+              type="text"
+              pInputText
+              formControlName="email"
+              placeholder="Es. info&#64;tennisclub.it"
+              [class.ng-invalid]="isInvalid('email')"
+            />
+            @if (isInvalid('email')) {
+              <small class="p-error">Inserisci un indirizzo email valido.</small>
+            }
+          </div>
+
+          <!-- Opening hours -->
+          <div class="form-field form-field--full">
+            <label for="openingHours">Orari di apertura</label>
+            <textarea
+              id="openingHours"
+              pInputTextarea
+              formControlName="openingHours"
+              [rows]="3"
+              placeholder="Es. Lun-Ven: 08:00-22:00, Sab-Dom: 09:00-20:00"
+              [autoResize]="true"
+            ></textarea>
+          </div>
+
+          <!-- Welcome message -->
+          <div class="form-field form-field--full">
+            <label for="welcomeMessage">Messaggio di benvenuto</label>
+            <textarea
+              id="welcomeMessage"
+              pInputTextarea
+              formControlName="welcomeMessage"
+              [rows]="5"
+              placeholder="Messaggio visibile nella pagina contatti"
+              [autoResize]="true"
+            ></textarea>
+          </div>
+        </div>
+      </p-card>
+
+      <!-- Map coordinates card -->
+      <p-card header="Posizione sulla mappa" styleClass="form-card">
+        <div class="form-grid">
+          <!-- Latitude -->
+          <div class="form-field">
+            <label for="latitude">Latitudine</label>
+            <p-inputNumber
+              id="latitude"
+              formControlName="latitude"
+              mode="decimal"
+              [minFractionDigits]="6"
+              [maxFractionDigits]="8"
+              placeholder="Es. 45.464203"
+              [style]="{ width: '100%' }"
+              [inputStyle]="{ width: '100%' }"
+            />
+          </div>
+
+          <!-- Longitude -->
+          <div class="form-field">
+            <label for="longitude">Longitudine</label>
+            <p-inputNumber
+              id="longitude"
+              formControlName="longitude"
+              mode="decimal"
+              [minFractionDigits]="6"
+              [maxFractionDigits]="8"
+              placeholder="Es. 9.191383"
+              [style]="{ width: '100%' }"
+              [inputStyle]="{ width: '100%' }"
+            />
+          </div>
+        </div>
+
+        <!-- Coordinates info note -->
+        @if (hasCoordinates) {
+          <div class="coordinates-note">
+            <i class="pi pi-map-marker"></i>
+            <span>Coordinate: {{ latitudeValue }}, {{ longitudeValue }}</span>
+          </div>
+        }
+      </p-card>
+
+      <!-- Form action buttons -->
+      <div class="form-actions-bar">
+        <button
+          pButton
+          type="submit"
+          label="Salva"
+          icon="pi pi-check"
+          severity="success"
+          [loading]="saving"
+        ></button>
+      </div>
+    </form>
+  }
+</div>

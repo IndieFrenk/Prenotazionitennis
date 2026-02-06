@@ -1,0 +1,258 @@
+<!-- Admin Reservations List -->
+<p-toast />
+<p-confirmDialog />
+
+<div class="admin-reservations">
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="page-header__left">
+      <h1>Gestione Prenotazioni</h1>
+      <p class="page-subtitle">Visualizza e gestisci tutte le prenotazioni del club</p>
+    </div>
+    <button
+      pButton
+      type="button"
+      label="Esporta CSV"
+      icon="pi pi-download"
+      class="p-button-outlined"
+      [disabled]="reservations.length === 0"
+      (click)="exportCsv()"
+    ></button>
+  </div>
+
+  <!-- Filters bar -->
+  <div class="filters-bar">
+    <div class="filters-row">
+      <!-- Date picker -->
+      <div class="filter-group">
+        <label for="filterDate">Data</label>
+        <p-calendar
+          id="filterDate"
+          [(ngModel)]="selectedDate"
+          dateFormat="dd/mm/yy"
+          [showIcon]="true"
+          [showClear]="true"
+          placeholder="Tutte le date"
+          [style]="{ width: '100%' }"
+          [inputStyle]="{ width: '100%' }"
+        />
+      </div>
+
+      <!-- Court dropdown -->
+      <div class="filter-group">
+        <label for="filterCourt">Campo</label>
+        <p-dropdown
+          id="filterCourt"
+          [options]="courtOptions"
+          [(ngModel)]="selectedCourtId"
+          placeholder="Tutti i campi"
+          [style]="{ width: '100%' }"
+        />
+      </div>
+
+      <!-- Status dropdown -->
+      <div class="filter-group">
+        <label for="filterStatus">Stato</label>
+        <p-dropdown
+          id="filterStatus"
+          [options]="statusOptions"
+          [(ngModel)]="selectedStatus"
+          placeholder="Tutte"
+          [style]="{ width: '100%' }"
+        />
+      </div>
+
+      <!-- Filter actions -->
+      <div class="filter-actions">
+        <button
+          pButton
+          type="button"
+          label="Filtra"
+          icon="pi pi-filter"
+          (click)="applyFilters()"
+        ></button>
+        <button
+          pButton
+          type="button"
+          label="Reset"
+          icon="pi pi-filter-slash"
+          class="p-button-outlined"
+          severity="secondary"
+          (click)="resetFilters()"
+        ></button>
+      </div>
+    </div>
+
+    <span class="record-count">
+      {{ totalRecords }} prenotazione/i trovata/e
+    </span>
+  </div>
+
+  <!-- Loading spinner -->
+  @if (loading) {
+    <div class="loading-container">
+      <p-progressSpinner strokeWidth="4" animationDuration="1s" />
+      <p>Caricamento prenotazioni...</p>
+    </div>
+  }
+
+  <!-- Reservations data table -->
+  @if (!loading && reservations.length > 0) {
+    <p-table
+      [value]="reservations"
+      [paginator]="false"
+      styleClass="p-datatable-striped"
+      [tableStyle]="{ 'min-width': '80rem' }"
+      [responsive]="true"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 7rem">ID</th>
+          <th pSortableColumn="username">
+            Utente
+            <p-sortIcon field="username" />
+          </th>
+          <th>Campo</th>
+          <th pSortableColumn="reservationDate">
+            Data prenotazione
+            <p-sortIcon field="reservationDate" />
+          </th>
+          <th style="width: 10rem">Orario</th>
+          <th style="width: 9rem">Stato</th>
+          <th pSortableColumn="paidPrice" style="width: 8rem">
+            Prezzo
+            <p-sortIcon field="paidPrice" />
+          </th>
+          <th style="width: 14rem">Azioni</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-reservation>
+        <tr>
+          <!-- Short ID -->
+          <td>
+            <span
+              class="reservation-id"
+              [pTooltip]="reservation.id"
+              tooltipPosition="top"
+            >
+              {{ shortId(reservation.id) }}
+            </span>
+          </td>
+
+          <!-- Username -->
+          <td>
+            <span class="reservation-username">{{ reservation.username }}</span>
+          </td>
+
+          <!-- Court name + type tag -->
+          <td>
+            <div class="court-cell">
+              <span class="court-name">{{ reservation.courtName }}</span>
+              <p-tag
+                [value]="reservation.courtType"
+                [severity]="getTypeSeverity(reservation.courtType)"
+                styleClass="court-type-tag"
+              />
+            </div>
+          </td>
+
+          <!-- Reservation date -->
+          <td>
+            <span class="reservation-date">{{ reservation.reservationDate }}</span>
+          </td>
+
+          <!-- Time range -->
+          <td>
+            <span class="reservation-time">
+              {{ reservation.startTime }} - {{ reservation.endTime }}
+            </span>
+          </td>
+
+          <!-- Status tag -->
+          <td>
+            <p-tag
+              [value]="getStatusLabel(reservation.status)"
+              [severity]="getStatusSeverity(reservation.status)"
+            />
+          </td>
+
+          <!-- Price -->
+          <td>
+            <span class="reservation-price">{{ formatCurrency(reservation.paidPrice) }}</span>
+          </td>
+
+          <!-- Action buttons -->
+          <td>
+            <div class="action-buttons">
+              @if (reservation.status === 'CONFERMATA') {
+                <button
+                  pButton
+                  type="button"
+                  label="Completa"
+                  icon="pi pi-check"
+                  class="p-button-sm p-button-outlined"
+                  severity="info"
+                  pTooltip="Segna come completata"
+                  (click)="completeReservation(reservation)"
+                ></button>
+                <button
+                  pButton
+                  type="button"
+                  label="Cancella"
+                  icon="pi pi-times"
+                  class="p-button-sm p-button-outlined"
+                  severity="danger"
+                  pTooltip="Cancella prenotazione"
+                  (click)="confirmCancel(reservation)"
+                ></button>
+              } @else {
+                <span class="status-final">
+                  <i class="pi pi-lock"></i>
+                  Stato finale
+                </span>
+              }
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="summary">
+        <div class="table-summary">
+          Pagina {{ currentPage + 1 }} - Totale: {{ totalRecords }} prenotazione/i
+        </div>
+      </ng-template>
+    </p-table>
+
+    <!-- Paginator -->
+    @if (totalRecords > pageSize) {
+      <p-paginator
+        [rows]="pageSize"
+        [totalRecords]="totalRecords"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        [first]="currentPage * pageSize"
+        (onPageChange)="onPageChange($event)"
+      />
+    }
+  }
+
+  <!-- Empty state -->
+  @if (!loading && reservations.length === 0) {
+    <div class="empty-state">
+      <i class="pi pi-calendar"></i>
+      @if (selectedDate || selectedCourtId || selectedStatus) {
+        <p>Nessuna prenotazione trovata con i filtri selezionati.</p>
+        <button
+          pButton
+          type="button"
+          label="Resetta filtri"
+          icon="pi pi-filter-slash"
+          class="p-button-outlined p-button-sm"
+          (click)="resetFilters()"
+        ></button>
+      } @else {
+        <p>Nessuna prenotazione presente.</p>
+      }
+    </div>
+  }
+</div>

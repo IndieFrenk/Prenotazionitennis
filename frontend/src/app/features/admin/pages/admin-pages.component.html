@@ -1,0 +1,98 @@
+<!-- Admin Pages List -->
+<p-toast />
+
+<div class="admin-pages">
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="page-header__left">
+      <h1>Gestione Pagine</h1>
+      <p class="page-subtitle">Modifica i contenuti delle pagine del sito</p>
+    </div>
+  </div>
+
+  <!-- Loading spinner -->
+  @if (loading) {
+    <div class="loading-container">
+      <p-progressSpinner strokeWidth="4" animationDuration="1s" />
+      <p>Caricamento pagine...</p>
+    </div>
+  }
+
+  <!-- Pages data table -->
+  @if (!loading && pages.length > 0) {
+    <p-table
+      [value]="pages"
+      [paginator]="false"
+      styleClass="p-datatable-striped"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [responsive]="true"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="title">
+            Titolo
+            <p-sortIcon field="title" />
+          </th>
+          <th style="width: 12rem">Slug</th>
+          <th pSortableColumn="updatedAt" style="width: 14rem">
+            Ultimo aggiornamento
+            <p-sortIcon field="updatedAt" />
+          </th>
+          <th style="width: 10rem">Azioni</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-page>
+        <tr>
+          <!-- Page title -->
+          <td>
+            <span class="page-title">{{ page.title }}</span>
+          </td>
+
+          <!-- Slug as monospace badge -->
+          <td>
+            <p-tag
+              [value]="page.slug"
+              severity="info"
+              styleClass="slug-tag"
+            />
+          </td>
+
+          <!-- Last updated date in Italian format -->
+          <td>
+            <span class="page-date">{{ formatDate(page.updatedAt) }}</span>
+          </td>
+
+          <!-- Action buttons -->
+          <td>
+            <div class="action-buttons">
+              <button
+                pButton
+                type="button"
+                label="Modifica"
+                icon="pi pi-pencil"
+                class="p-button-sm p-button-outlined"
+                severity="info"
+                (click)="editPage(page)"
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="summary">
+        <div class="table-summary">
+          Totale: {{ pages.length }} pagina/e
+        </div>
+      </ng-template>
+    </p-table>
+  }
+
+  <!-- Empty state when no pages exist -->
+  @if (!loading && pages.length === 0) {
+    <div class="empty-state">
+      <i class="pi pi-file"></i>
+      <p>Nessuna pagina trovata.</p>
+    </div>
+  }
+</div>

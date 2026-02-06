@@ -1,0 +1,140 @@
+/* Contact page styles */
+
+.contact-page {
+  flex: 1;
+}
+
+/* Page header */
+.page-header {
+  text-align: center;
+  padding: 2.5rem 1.5rem 1.5rem;
+  background: var(--surface-ground);
+
+  h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: var(--text-color-secondary);
+    margin: 0;
+  }
+}
+
+/* Contact content section */
+.contact-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+}
+
+/* Info card */
+:host ::ng-deep .info-card {
+  height: 100%;
+}
+
+.welcome-message {
+  color: var(--text-color);
+  line-height: 1.6;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Contact info items */
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+
+  > i {
+    font-size: 1.25rem;
+    color: var(--primary-color);
+    margin-top: 0.15rem;
+    min-width: 1.5rem;
+    text-align: center;
+  }
+}
+
+.info-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.info-label {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03rem;
+}
+
+.info-value {
+  font-size: 1rem;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.info-link {
+  text-decoration: none;
+  color: var(--primary-color);
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--primary-700, var(--primary-color));
+    text-decoration: underline;
+  }
+}
+
+/* Form card */
+:host ::ng-deep .form-card {
+  height: 100%;
+}
+
+/* Form fields */
+.field {
+  margin-bottom: 1.25rem;
+
+  label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+  }
+}
+
+.p-error {
+  display: block;
+  margin-top: 0.25rem;
+}
+
+/* Form actions */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .form-actions {
+    justify-content: stretch;
+
+    :host ::ng-deep .p-button {
+      width: 100%;
+    }
+  }
+}

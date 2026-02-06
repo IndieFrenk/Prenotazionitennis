@@ -1,0 +1,100 @@
+<!-- Page header -->
+<app-header />
+
+<main class="court-list-page">
+  <!-- Page title -->
+  <section class="page-header">
+    <h1>I nostri campi</h1>
+    <p>Scopri tutti i campi disponibili per tennis e padel</p>
+  </section>
+
+  <!-- Type filter -->
+  <section class="filter-section">
+    <p-selectButton
+      [options]="filterOptions"
+      [(ngModel)]="selectedType"
+      (onChange)="onFilterChange()"
+      optionLabel="label"
+      optionValue="value"
+    />
+  </section>
+
+  <!-- Loading state -->
+  @if (loading) {
+    <app-loading-spinner />
+  }
+
+  <!-- Court grid -->
+  @if (!loading) {
+    @if (filteredCourts.length === 0) {
+      <div class="empty-state">
+        <i class="pi pi-inbox"></i>
+        <p>Nessun campo trovato per il filtro selezionato.</p>
+      </div>
+    } @else {
+      <section class="courts-grid">
+        <div class="grid">
+          @for (court of filteredCourts; track court.id) {
+            <div class="col-12 md:col-6 lg:col-4">
+              <p-card styleClass="court-card">
+                <!-- Court image -->
+                <ng-template pTemplate="header">
+                  <div class="court-image-wrapper">
+                    <img
+                      [src]="getCourtImage(court)"
+                      [alt]="getCourtImageAlt(court)"
+                      class="court-image"
+                    />
+                    <p-tag
+                      [value]="court.type"
+                      [severity]="getTypeSeverity(court.type)"
+                      class="type-badge"
+                    />
+                  </div>
+                </ng-template>
+
+                <!-- Court info -->
+                <h3 class="court-name">{{ court.name }}</h3>
+                <p class="court-description">{{ getExcerpt(court.description) }}</p>
+
+                <!-- Prices -->
+                <div class="court-prices">
+                  <div class="price-item">
+                    <span class="price-label">Tariffa standard</span>
+                    <span class="price-value">&euro; {{ court.basePrice | number:'1.2-2' }}/h</span>
+                  </div>
+                  <div class="price-item">
+                    <span class="price-label">Tariffa soci</span>
+                    <span class="price-value price-member">&euro; {{ court.memberPrice | number:'1.2-2' }}/h</span>
+                  </div>
+                </div>
+
+                <!-- Action buttons -->
+                <ng-template pTemplate="footer">
+                  <div class="card-actions">
+                    <p-button
+                      label="Dettagli"
+                      icon="pi pi-info-circle"
+                      severity="secondary"
+                      [outlined]="true"
+                      (onClick)="viewDetails(court)"
+                    />
+                    <p-button
+                      label="Prenota"
+                      icon="pi pi-calendar-plus"
+                      severity="primary"
+                      (onClick)="bookCourt(court)"
+                    />
+                  </div>
+                </ng-template>
+              </p-card>
+            </div>
+          }
+        </div>
+      </section>
+    }
+  }
+</main>
+
+<!-- Page footer -->
+<app-footer />

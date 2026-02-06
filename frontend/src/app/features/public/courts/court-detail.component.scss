@@ -1,0 +1,179 @@
+/* Court detail page styles */
+
+.court-detail-page {
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem 3rem;
+  width: 100%;
+}
+
+/* Back navigation */
+.back-nav {
+  padding: 1rem 0;
+}
+
+/* Court header */
+.court-header {
+  margin-bottom: 1.5rem;
+}
+
+.court-title-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0;
+  }
+}
+
+:host ::ng-deep .court-type-tag {
+  font-size: 0.9rem;
+}
+
+/* Gallery section */
+.gallery-section {
+  margin-bottom: 2rem;
+}
+
+:host ::ng-deep .court-gallery {
+  .p-galleria-item {
+    border-radius: 8px;
+    overflow: hidden;
+  }
+}
+
+.gallery-image {
+  width: 100%;
+  max-height: 500px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.gallery-thumbnail {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* Stock image when no photos available */
+.stock-image-wrapper {
+  display: flex;
+  justify-content: center;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--surface-100);
+}
+
+.stock-image {
+  width: 100%;
+  max-height: 500px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Detail cards */
+:host ::ng-deep .detail-card {
+  margin-bottom: 1.5rem;
+}
+
+.court-description {
+  color: var(--text-color);
+  line-height: 1.7;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Info rows */
+.info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+
+  > i {
+    font-size: 1.25rem;
+    color: var(--primary-color);
+    margin-top: 0.15rem;
+  }
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.info-label {
+  font-size: 0.85rem;
+  color: var(--text-color-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03rem;
+}
+
+.info-value {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+/* Price card */
+:host ::ng-deep .price-card {
+  .p-card-body {
+    padding-bottom: 1rem;
+  }
+}
+
+.price-label-cell {
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.price-value-cell {
+  font-weight: 600;
+  color: var(--primary-color);
+  text-align: right;
+}
+
+.booking-action {
+  margin-top: 1.5rem;
+}
+
+/* Error state */
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+
+  i {
+    font-size: 3rem;
+    color: var(--red-500);
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: var(--text-color-secondary);
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .court-title-row h1 {
+    font-size: 1.75rem;
+  }
+
+  .gallery-image {
+    max-height: 300px;
+  }
+}

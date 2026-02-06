@@ -1,0 +1,104 @@
+/* Resend verification page styles */
+
+.resend-page {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  min-height: calc(100vh - 200px);
+}
+
+.resend-container {
+  width: 100%;
+  max-width: 450px;
+}
+
+:host ::ng-deep .resend-card {
+  .p-card-header {
+    padding-bottom: 0;
+  }
+
+  .p-card-body {
+    padding-top: 1rem;
+  }
+}
+
+.card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem 1.5rem 0;
+
+  i {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0;
+  }
+}
+
+.description {
+  text-align: center;
+  color: var(--text-color-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.resend-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-weight: 500;
+    color: var(--text-color);
+  }
+}
+
+.card-footer {
+  display: flex;
+  justify-content: center;
+  padding-top: 0.5rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .resend-page {
+    padding: 1rem;
+  }
+
+  .card-header {
+    padding: 1rem 1rem 0;
+
+    h1 {
+      font-size: 1.25rem;
+    }
+  }
+}

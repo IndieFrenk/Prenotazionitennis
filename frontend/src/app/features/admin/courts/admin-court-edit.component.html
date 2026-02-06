@@ -1,0 +1,307 @@
+<!-- Admin Court Edit / Create -->
+<p-toast />
+<p-confirmDialog />
+
+<div class="admin-court-edit">
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="page-header__left">
+      <h1>{{ pageTitle }}</h1>
+      <p class="page-subtitle">{{ pageSubtitle }}</p>
+    </div>
+    <button
+      pButton
+      type="button"
+      label="Torna alla lista"
+      icon="pi pi-arrow-left"
+      class="p-button-outlined"
+      (click)="cancel()"
+    ></button>
+  </div>
+
+  <!-- Loading spinner -->
+  @if (loading) {
+    <div class="loading-container">
+      <p-progressSpinner strokeWidth="4" animationDuration="1s" />
+      <p>Caricamento dati campo...</p>
+    </div>
+  }
+
+  <!-- Form (visible when not loading) -->
+  @if (!loading) {
+    <form [formGroup]="courtForm" (ngSubmit)="save()" class="court-form">
+      <!-- Court data card -->
+      <p-card header="Dati campo" styleClass="form-card">
+        <div class="form-grid">
+          <!-- Nome -->
+          <div class="form-field">
+            <label for="nome">Nome *</label>
+            <input
+              id="nome"
+              type="text"
+              pInputText
+              formControlName="nome"
+              placeholder="Es. Campo Centrale"
+              [class.ng-invalid]="isInvalid('nome')"
+            />
+            @if (isInvalid('nome')) {
+              <small class="p-error">Il nome e obbligatorio.</small>
+            }
+          </div>
+
+          <!-- Tipo -->
+          <div class="form-field">
+            <label for="tipo">Tipo *</label>
+            <p-dropdown
+              id="tipo"
+              [options]="typeOptions"
+              formControlName="tipo"
+              placeholder="Seleziona tipo"
+              [style]="{ width: '100%' }"
+            />
+          </div>
+
+          <!-- Stato -->
+          <div class="form-field">
+            <label for="stato">Stato *</label>
+            <p-dropdown
+              id="stato"
+              [options]="statusOptions"
+              formControlName="stato"
+              placeholder="Seleziona stato"
+              [style]="{ width: '100%' }"
+            />
+          </div>
+
+          <!-- Prezzo Base -->
+          <div class="form-field">
+            <label for="prezzoBase">Prezzo base (EUR) *</label>
+            <p-inputNumber
+              id="prezzoBase"
+              formControlName="prezzoBase"
+              mode="currency"
+              currency="EUR"
+              locale="it-IT"
+              [min]="0"
+              [style]="{ width: '100%' }"
+              [inputStyle]="{ width: '100%' }"
+            />
+            @if (isInvalid('prezzoBase')) {
+              <small class="p-error">Il prezzo base e obbligatorio e deve essere >= 0.</small>
+            }
+          </div>
+
+          <!-- Prezzo Socio -->
+          <div class="form-field">
+            <label for="prezzoSocio">Prezzo socio (EUR) *</label>
+            <p-inputNumber
+              id="prezzoSocio"
+              formControlName="prezzoSocio"
+              mode="currency"
+              currency="EUR"
+              locale="it-IT"
+              [min]="0"
+              [style]="{ width: '100%' }"
+              [inputStyle]="{ width: '100%' }"
+            />
+            @if (isInvalid('prezzoSocio')) {
+              <small class="p-error">Il prezzo socio e obbligatorio e deve essere >= 0.</small>
+            }
+          </div>
+
+          <!-- Durata Slot -->
+          <div class="form-field">
+            <label for="durataSlot">Durata slot (minuti) *</label>
+            <p-inputNumber
+              id="durataSlot"
+              formControlName="durataSlot"
+              [min]="30"
+              [step]="15"
+              suffix=" min"
+              [style]="{ width: '100%' }"
+              [inputStyle]="{ width: '100%' }"
+            />
+            @if (isInvalid('durataSlot')) {
+              <small class="p-error">La durata minima e 30 minuti.</small>
+            }
+          </div>
+
+          <!-- Orario Apertura -->
+          <div class="form-field">
+            <label for="orarioApertura">Orario apertura *</label>
+            <p-calendar
+              id="orarioApertura"
+              formControlName="orarioApertura"
+              [timeOnly]="true"
+              [hourFormat]="'24'"
+              [showIcon]="true"
+              icon="pi pi-clock"
+              placeholder="HH:mm"
+              [style]="{ width: '100%' }"
+              [inputStyle]="{ width: '100%' }"
+            />
+            @if (isInvalid('orarioApertura')) {
+              <small class="p-error">L'orario di apertura e obbligatorio.</small>
+            }
+          </div>
+
+          <!-- Orario Chiusura -->
+          <div class="form-field">
+            <label for="orarioChiusura">Orario chiusura *</label>
+            <p-calendar
+              id="orarioChiusura"
+              formControlName="orarioChiusura"
+              [timeOnly]="true"
+              [hourFormat]="'24'"
+              [showIcon]="true"
+              icon="pi pi-clock"
+              placeholder="HH:mm"
+              [style]="{ width: '100%' }"
+              [inputStyle]="{ width: '100%' }"
+            />
+            @if (isInvalid('orarioChiusura')) {
+              <small class="p-error">L'orario di chiusura e obbligatorio.</small>
+            }
+          </div>
+
+          <!-- Ordine Visualizzazione -->
+          <div class="form-field">
+            <label for="ordineVisualizzazione">Ordine visualizzazione</label>
+            <p-inputNumber
+              id="ordineVisualizzazione"
+              formControlName="ordineVisualizzazione"
+              [min]="0"
+              [style]="{ width: '100%' }"
+              [inputStyle]="{ width: '100%' }"
+            />
+          </div>
+
+          <!-- Descrizione (full width) -->
+          <div class="form-field form-field--full">
+            <label for="descrizione">Descrizione</label>
+            <textarea
+              id="descrizione"
+              pInputTextarea
+              formControlName="descrizione"
+              [rows]="4"
+              placeholder="Descrizione del campo (opzionale)"
+              [autoResize]="true"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Form action buttons -->
+        <div class="form-actions">
+          <button
+            pButton
+            type="button"
+            label="Annulla"
+            icon="pi pi-times"
+            class="p-button-outlined"
+            severity="secondary"
+            (click)="cancel()"
+          ></button>
+          <button
+            pButton
+            type="submit"
+            [label]="isCreateMode ? 'Crea campo' : 'Salva modifiche'"
+            icon="pi pi-check"
+            severity="success"
+            [loading]="saving"
+          ></button>
+        </div>
+      </p-card>
+    </form>
+
+    <!-- Photo management section (edit mode only) -->
+    @if (showPhotoSection) {
+      <p-card header="Gestione foto" styleClass="form-card photo-card">
+        <!-- Existing photos grid -->
+        @if (photos.length > 0) {
+          <div class="photos-grid">
+            @for (photo of photos; track photo.id) {
+              <div class="photo-item">
+                <div class="photo-thumbnail">
+                  <img [src]="photo.imageUrl" [alt]="photo.altText || 'Foto campo'" />
+                </div>
+                <div class="photo-info">
+                  <span class="photo-alt">{{ photo.altText || 'Nessun testo alternativo' }}</span>
+                  <span class="photo-order">Ordine: {{ photo.displayOrder }}</span>
+                </div>
+                <button
+                  pButton
+                  type="button"
+                  icon="pi pi-trash"
+                  class="p-button-sm p-button-outlined p-button-danger"
+                  pTooltip="Elimina foto"
+                  (click)="confirmDeletePhoto(photo)"
+                ></button>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="no-photos">
+            <i class="pi pi-image"></i>
+            <p>Nessuna foto caricata per questo campo.</p>
+          </div>
+        }
+
+        <!-- Upload new photo -->
+        @if (!maxPhotosReached) {
+          <div class="upload-section">
+            <h3>Carica nuova foto</h3>
+
+            <div class="upload-fields">
+              <div class="form-field">
+                <label for="photoAltText">Testo alternativo</label>
+                <input
+                  id="photoAltText"
+                  type="text"
+                  pInputText
+                  [(ngModel)]="photoAltText"
+                  placeholder="Descrizione della foto"
+                />
+              </div>
+
+              <div class="form-field">
+                <label for="photoOrder">Ordine</label>
+                <p-inputNumber
+                  id="photoOrder"
+                  [(ngModel)]="photoDisplayOrder"
+                  [min]="1"
+                  [style]="{ width: '100%' }"
+                  [inputStyle]="{ width: '100%' }"
+                />
+              </div>
+            </div>
+
+            <p-fileUpload
+              mode="advanced"
+              name="file"
+              accept="image/*"
+              [maxFileSize]="5000000"
+              chooseLabel="Scegli foto"
+              uploadLabel="Carica"
+              cancelLabel="Annulla"
+              [customUpload]="true"
+              (uploadHandler)="onPhotoUpload($event)"
+            >
+              <ng-template pTemplate="empty">
+                <div class="upload-placeholder">
+                  <i class="pi pi-cloud-upload"></i>
+                  <p>Trascina un'immagine qui oppure clicca "Scegli foto"</p>
+                  <small>Formati accettati: JPG, PNG, WebP. Max 5 MB.</small>
+                </div>
+              </ng-template>
+            </p-fileUpload>
+          </div>
+        } @else {
+          <div class="max-photos-warning">
+            <i class="pi pi-info-circle"></i>
+            <span>Numero massimo di foto raggiunto ({{ maxPhotos }}). Elimina una foto esistente per caricarne una nuova.</span>
+          </div>
+        }
+      </p-card>
+    }
+  }
+</div>

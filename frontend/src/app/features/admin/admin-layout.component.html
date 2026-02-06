@@ -1,0 +1,75 @@
+<!-- Page header -->
+<app-header />
+
+<div class="admin-layout">
+  <!-- Mobile top bar with hamburger toggle -->
+  <div class="mobile-topbar">
+    <button
+      pButton
+      pRipple
+      type="button"
+      icon="pi pi-bars"
+      class="p-button-text p-button-plain"
+      (click)="toggleSidebar()"
+      aria-label="Apri menu admin"
+    ></button>
+    <span class="mobile-title">Pannello Admin</span>
+  </div>
+
+  <!-- Overlay backdrop for mobile sidebar -->
+  @if (sidebarOpen) {
+    <div class="sidebar-overlay" (click)="closeSidebar()"></div>
+  }
+
+  <!-- Sidebar navigation -->
+  <aside class="sidebar" [class.open]="sidebarOpen">
+    <!-- Admin user info section -->
+    @if (currentUser) {
+      <div class="sidebar-user">
+        <div class="user-avatar">
+          <i class="pi pi-shield"></i>
+        </div>
+        <div class="user-details">
+          <span class="user-name">{{ currentUser.username }}</span>
+          <p-tag value="Amministratore" severity="danger" />
+        </div>
+      </div>
+    }
+
+    <!-- Navigation links -->
+    <nav class="sidebar-nav">
+      @for (item of navItems; track item.route) {
+        <a
+          class="nav-item"
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: item.route === '/admin/panoramica' }"
+          (click)="closeSidebar()"
+        >
+          <i class="pi {{ item.icon }}"></i>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+
+      <div class="nav-separator"></div>
+
+      <!-- Link back to user dashboard -->
+      <a
+        class="nav-item"
+        routerLink="/dashboard"
+        (click)="closeSidebar()"
+      >
+        <i class="pi pi-arrow-left"></i>
+        <span>Dashboard utente</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main content area -->
+  <main class="admin-content">
+    <router-outlet />
+  </main>
+</div>
+
+<!-- Page footer -->
+<app-footer />

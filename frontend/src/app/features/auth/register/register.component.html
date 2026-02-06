@@ -1,0 +1,164 @@
+<!-- Page header -->
+<app-header />
+
+<main class="register-page">
+  <div class="register-container">
+    <p-card styleClass="register-card">
+      <!-- Card header -->
+      <ng-template pTemplate="header">
+        <div class="card-header">
+          <i class="pi pi-user-plus"></i>
+          <h1>Registrati</h1>
+          <p>Crea un nuovo account per prenotare i campi</p>
+        </div>
+      </ng-template>
+
+      <!-- Success message -->
+      @if (successMessage) {
+        <div class="success-section">
+          <i class="pi pi-check-circle success-icon"></i>
+          <p-message severity="success" [text]="successMessage" styleClass="w-full mb-3" />
+          <p class="success-info">
+            Ti abbiamo inviato un'email di verifica. Clicca sul link nell'email per attivare il tuo account.
+          </p>
+          <p-button
+            label="Vai al Login"
+            icon="pi pi-sign-in"
+            severity="primary"
+            routerLink="/login"
+            styleClass="mt-3"
+          />
+        </div>
+      }
+
+      <!-- Error message -->
+      @if (errorMessage && !successMessage) {
+        <p-message severity="error" [text]="errorMessage" styleClass="w-full mb-3" />
+      }
+
+      <!-- Registration form (hidden after success) -->
+      @if (!successMessage) {
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <!-- Username field -->
+        <div class="field">
+          <label for="username">Nome utente</label>
+          <input
+            id="username"
+            type="text"
+            pInputText
+            formControlName="username"
+            placeholder="Scegli un nome utente"
+            [class.ng-invalid]="isFieldInvalid('username')"
+            [class.ng-dirty]="isFieldInvalid('username')"
+          />
+          @if (isFieldInvalid('username')) {
+            <small class="p-error">
+              @if (registerForm.get('username')?.hasError('required')) {
+                Il nome utente è obbligatorio.
+              } @else if (registerForm.get('username')?.hasError('minlength')) {
+                Il nome utente deve contenere almeno 3 caratteri.
+              }
+            </small>
+          }
+        </div>
+
+        <!-- Email field -->
+        <div class="field">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            pInputText
+            formControlName="email"
+            placeholder="La tua email"
+            [class.ng-invalid]="isFieldInvalid('email')"
+            [class.ng-dirty]="isFieldInvalid('email')"
+          />
+          @if (isFieldInvalid('email')) {
+            <small class="p-error">
+              @if (registerForm.get('email')?.hasError('required')) {
+                L'email è obbligatoria.
+              } @else if (registerForm.get('email')?.hasError('email')) {
+                Inserisci un indirizzo email valido.
+              }
+            </small>
+          }
+        </div>
+
+        <!-- Password field -->
+        <div class="field">
+          <label for="password">Password</label>
+          <p-password
+            id="password"
+            formControlName="password"
+            placeholder="Almeno 8 caratteri"
+            [toggleMask]="true"
+            [feedback]="true"
+            styleClass="w-full"
+            inputStyleClass="w-full"
+            promptLabel="Inserisci una password"
+            weakLabel="Debole"
+            mediumLabel="Media"
+            strongLabel="Forte"
+          />
+          @if (isFieldInvalid('password')) {
+            <small class="p-error">
+              @if (registerForm.get('password')?.hasError('required')) {
+                La password è obbligatoria.
+              } @else if (registerForm.get('password')?.hasError('minlength')) {
+                La password deve contenere almeno 8 caratteri.
+              }
+            </small>
+          }
+        </div>
+
+        <!-- Confirm password field -->
+        <div class="field">
+          <label for="confirmPassword">Conferma password</label>
+          <p-password
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            placeholder="Ripeti la password"
+            [feedback]="false"
+            [toggleMask]="true"
+            styleClass="w-full"
+            inputStyleClass="w-full"
+          />
+          @if (isFieldInvalid('confirmPassword')) {
+            <small class="p-error">
+              La conferma password è obbligatoria.
+            </small>
+          }
+          @if (hasPasswordMismatch()) {
+            <small class="p-error">
+              Le password non coincidono.
+            </small>
+          }
+        </div>
+
+        <!-- Submit button -->
+        <p-button
+          type="submit"
+          label="Registrati"
+          icon="pi pi-user-plus"
+          severity="primary"
+          styleClass="w-full"
+          [loading]="submitting"
+          [disabled]="submitting"
+        />
+      </form>
+      }
+
+      <!-- Login link -->
+      <ng-template pTemplate="footer">
+        <div class="login-link">
+          <span>Hai gia' un account?</span>
+          <a routerLink="/login">Accedi</a>
+        </div>
+      </ng-template>
+    </p-card>
+  </div>
+</main>
+
+<!-- Page footer -->
+<app-footer />

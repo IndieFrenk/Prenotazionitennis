@@ -1,0 +1,67 @@
+<app-header />
+
+<main class="resend-page">
+  <div class="resend-container">
+    <p-card styleClass="resend-card">
+      <ng-template pTemplate="header">
+        <div class="card-header">
+          <i class="pi pi-envelope"></i>
+          <h1>Reinvia email di verifica</h1>
+        </div>
+      </ng-template>
+
+      <p class="description">
+        Inserisci il tuo indirizzo email per ricevere un nuovo link di verifica.
+      </p>
+
+      <!-- Success message -->
+      @if (successMessage) {
+        <p-message severity="success" [text]="successMessage" styleClass="w-full mb-3" />
+      }
+
+      <!-- Error message -->
+      @if (errorMessage) {
+        <p-message severity="error" [text]="errorMessage" styleClass="w-full mb-3" />
+      }
+
+      <!-- Form -->
+      @if (!successMessage) {
+        <form (ngSubmit)="onSubmit()" class="resend-form">
+          <div class="form-field">
+            <label for="email">Email</label>
+            <input
+              pInputText
+              id="email"
+              type="email"
+              [(ngModel)]="email"
+              name="email"
+              placeholder="La tua email"
+              [disabled]="loading"
+              class="w-full"
+            />
+          </div>
+
+          <p-button
+            type="submit"
+            label="Invia link di verifica"
+            icon="pi pi-send"
+            severity="primary"
+            styleClass="w-full"
+            [loading]="loading"
+          />
+        </form>
+      }
+
+      <ng-template pTemplate="footer">
+        <div class="card-footer">
+          <a routerLink="/auth/login" class="back-link">
+            <i class="pi pi-arrow-left"></i>
+            Torna al login
+          </a>
+        </div>
+      </ng-template>
+    </p-card>
+  </div>
+</main>
+
+<app-footer />

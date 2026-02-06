@@ -1,0 +1,81 @@
+<!-- Page header -->
+<app-header />
+
+<div class="dashboard-layout">
+  <!-- Mobile top bar with hamburger toggle -->
+  <div class="mobile-topbar">
+    <button
+      pButton
+      pRipple
+      type="button"
+      icon="pi pi-bars"
+      class="p-button-text p-button-plain"
+      (click)="toggleSidebar()"
+      aria-label="Apri menu"
+    ></button>
+    <span class="mobile-title">Dashboard</span>
+  </div>
+
+  <!-- Overlay backdrop for mobile sidebar -->
+  @if (sidebarOpen) {
+    <div class="sidebar-overlay" (click)="closeSidebar()"></div>
+  }
+
+  <!-- Sidebar navigation -->
+  <aside class="sidebar" [class.open]="sidebarOpen">
+    <!-- User info section -->
+    @if (currentUser) {
+      <div class="sidebar-user">
+        <div class="user-avatar">
+          <i class="pi pi-user"></i>
+        </div>
+        <div class="user-details">
+          <span class="user-name">{{ currentUser.username }}</span>
+          <p-tag
+            [value]="getRoleLabel(currentUser.role)"
+            [severity]="getRoleSeverity(currentUser.role)"
+          />
+        </div>
+      </div>
+    }
+
+    <!-- Navigation links -->
+    <nav class="sidebar-nav">
+      @for (item of navItems; track item.route) {
+        <a
+          class="nav-item"
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: item.route === '/dashboard/profilo' }"
+          (click)="closeSidebar()"
+        >
+          <i class="pi {{ item.icon }}"></i>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+
+      <div class="nav-separator"></div>
+
+      <!-- Admin panel link (visible only to admin users) -->
+      @if (isAdmin) {
+        <a
+          class="nav-item"
+          routerLink="/admin"
+          routerLinkActive="active"
+          (click)="closeSidebar()"
+        >
+          <i class="pi pi-cog"></i>
+          <span>Pannello Admin</span>
+        </a>
+      }
+    </nav>
+  </aside>
+
+  <!-- Main content area -->
+  <main class="dashboard-content">
+    <router-outlet />
+  </main>
+</div>
+
+<!-- Page footer -->
+<app-footer />

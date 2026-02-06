@@ -1,0 +1,165 @@
+<!-- Page header -->
+<app-header />
+
+<main class="contact-page">
+  <!-- Page title -->
+  <section class="page-header">
+    <h1>Contattaci</h1>
+    <p>Hai domande? Siamo qui per aiutarti</p>
+  </section>
+
+  <!-- Loading state -->
+  @if (loading) {
+    <app-loading-spinner />
+  }
+
+  <!-- Two-column layout: contact info + form -->
+  <section class="contact-content">
+    <div class="grid">
+      <!-- Left column: contact information -->
+      <div class="col-12 lg:col-5">
+        @if (contactInfo) {
+          <p-card header="Informazioni di contatto" styleClass="info-card">
+            <!-- Welcome message -->
+            @if (contactInfo.welcomeMessage) {
+              <p class="welcome-message">{{ contactInfo.welcomeMessage }}</p>
+              <p-divider />
+            }
+
+            <!-- Address -->
+            <div class="info-item">
+              <i class="pi pi-map-marker"></i>
+              <div class="info-text">
+                <span class="info-label">Indirizzo</span>
+                <span class="info-value">{{ contactInfo.address }}</span>
+              </div>
+            </div>
+
+            <!-- Phone -->
+            <div class="info-item">
+              <i class="pi pi-phone"></i>
+              <div class="info-text">
+                <span class="info-label">Telefono</span>
+                <a [href]="'tel:' + contactInfo.phone" class="info-value info-link">
+                  {{ contactInfo.phone }}
+                </a>
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="info-item">
+              <i class="pi pi-envelope"></i>
+              <div class="info-text">
+                <span class="info-label">Email</span>
+                <a [href]="'mailto:' + contactInfo.email" class="info-value info-link">
+                  {{ contactInfo.email }}
+                </a>
+              </div>
+            </div>
+
+            <!-- Opening hours -->
+            <div class="info-item">
+              <i class="pi pi-clock"></i>
+              <div class="info-text">
+                <span class="info-label">Orari di apertura</span>
+                <span class="info-value">{{ contactInfo.openingHours }}</span>
+              </div>
+            </div>
+          </p-card>
+        }
+      </div>
+
+      <!-- Right column: contact form -->
+      <div class="col-12 lg:col-7">
+        <p-card header="Inviaci un messaggio" styleClass="form-card">
+          <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+            <!-- Name field -->
+            <div class="field">
+              <label for="name">Nome *</label>
+              <input
+                id="name"
+                type="text"
+                pInputText
+                formControlName="name"
+                placeholder="Il tuo nome"
+                [class.ng-invalid]="isFieldInvalid('name')"
+                [class.ng-dirty]="isFieldInvalid('name')"
+              />
+              @if (isFieldInvalid('name')) {
+                <small class="p-error">
+                  @if (contactForm.get('name')?.hasError('required')) {
+                    Il nome è obbligatorio.
+                  } @else if (contactForm.get('name')?.hasError('minlength')) {
+                    Il nome deve contenere almeno 2 caratteri.
+                  }
+                </small>
+              }
+            </div>
+
+            <!-- Email field -->
+            <div class="field">
+              <label for="email">Email *</label>
+              <input
+                id="email"
+                type="email"
+                pInputText
+                formControlName="email"
+                placeholder="La tua email"
+                [class.ng-invalid]="isFieldInvalid('email')"
+                [class.ng-dirty]="isFieldInvalid('email')"
+              />
+              @if (isFieldInvalid('email')) {
+                <small class="p-error">
+                  @if (contactForm.get('email')?.hasError('required')) {
+                    L'email è obbligatoria.
+                  } @else if (contactForm.get('email')?.hasError('email')) {
+                    Inserisci un indirizzo email valido.
+                  }
+                </small>
+              }
+            </div>
+
+            <!-- Message field -->
+            <div class="field">
+              <label for="message">Messaggio *</label>
+              <textarea
+                id="message"
+                pInputTextarea
+                formControlName="message"
+                placeholder="Scrivi il tuo messaggio..."
+                rows="6"
+                [autoResize]="true"
+                [class.ng-invalid]="isFieldInvalid('message')"
+                [class.ng-dirty]="isFieldInvalid('message')"
+              ></textarea>
+              @if (isFieldInvalid('message')) {
+                <small class="p-error">
+                  @if (contactForm.get('message')?.hasError('required')) {
+                    Il messaggio è obbligatorio.
+                  } @else if (contactForm.get('message')?.hasError('minlength')) {
+                    Il messaggio deve contenere almeno 10 caratteri.
+                  }
+                </small>
+              }
+            </div>
+
+            <!-- Submit button -->
+            <div class="form-actions">
+              <p-button
+                type="submit"
+                label="Invia messaggio"
+                icon="pi pi-send"
+                severity="primary"
+                [loading]="submitting"
+                [disabled]="submitting"
+              />
+            </div>
+          </form>
+        </p-card>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Page footer -->
+<app-footer />

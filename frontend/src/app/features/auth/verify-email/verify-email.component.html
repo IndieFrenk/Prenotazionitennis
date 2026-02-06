@@ -1,0 +1,59 @@
+<app-header />
+
+<main class="verify-email-page">
+  <div class="verify-container">
+    <p-card styleClass="verify-card">
+      <!-- Loading state -->
+      @if (loading) {
+        <div class="status-content">
+          <p-progressSpinner styleClass="verify-spinner" />
+          <h2>Verifica in corso...</h2>
+          <p>Stiamo verificando il tuo indirizzo email.</p>
+        </div>
+      }
+
+      <!-- Success state -->
+      @if (!loading && success) {
+        <div class="status-content success">
+          <i class="pi pi-check-circle"></i>
+          <h2>Email verificata!</h2>
+          <p>Il tuo indirizzo email e' stato verificato con successo.</p>
+          <p>Ora puoi effettuare il login al tuo account.</p>
+          <p-button
+            label="Vai al Login"
+            icon="pi pi-sign-in"
+            severity="primary"
+            (onClick)="goToLogin()"
+          />
+        </div>
+      }
+
+      <!-- Error state -->
+      @if (!loading && !success && errorMessage) {
+        <div class="status-content error">
+          <i class="pi pi-times-circle"></i>
+          <h2>Verifica fallita</h2>
+          <p>{{ errorMessage }}</p>
+          <p>Se il link e' scaduto, puoi richiederne uno nuovo.</p>
+          <div class="action-buttons">
+            <p-button
+              label="Richiedi nuovo link"
+              icon="pi pi-envelope"
+              severity="primary"
+              (onClick)="goToResend()"
+            />
+            <p-button
+              label="Vai al Login"
+              icon="pi pi-sign-in"
+              severity="secondary"
+              [outlined]="true"
+              (onClick)="goToLogin()"
+            />
+          </div>
+        </div>
+      }
+    </p-card>
+  </div>
+</main>
+
+<app-footer />

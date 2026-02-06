@@ -1,0 +1,267 @@
+<!-- Page header -->
+<app-header />
+
+<main class="court-booking-page">
+
+  <!-- Loading state for court info -->
+  @if (loadingCourt) {
+    <app-loading-spinner />
+  }
+
+  <!-- Court info header -->
+  @if (!loadingCourt && court) {
+    <section class="court-info-header">
+      <div class="back-nav">
+        <p-button
+          label="Torna ai campi"
+          icon="pi pi-arrow-left"
+          severity="secondary"
+          [outlined]="true"
+          [text]="true"
+          (onClick)="goBack()"
+        />
+      </div>
+
+      <div class="court-title-row">
+        <h1>{{ court.name }}</h1>
+        <p-tag
+          [value]="court.type"
+          [severity]="getTypeSeverity(court.type)"
+        />
+      </div>
+
+      <div class="court-meta">
+        <span class="meta-item">
+          <i class="pi pi-clock"></i>
+          {{ court.openingTime }} - {{ court.closingTime }}
+        </span>
+        <span class="meta-item">
+          <i class="pi pi-euro"></i>
+          @if (isMember) {
+            {{ court.memberPrice | number:'1.2-2' }}/h
+            <small class="original-price">({{ court.basePrice | number:'1.2-2' }}/h)</small>
+          } @else {
+            {{ court.basePrice | number:'1.2-2' }}/h
+          }
+        </span>
+      </div>
+    </section>
+
+    <!-- Date navigation -->
+    <section class="date-navigation">
+      <p-button
+        icon="pi pi-chevron-left"
+        severity="secondary"
+        [outlined]="true"
+        [rounded]="true"
+        [disabled]="isPrevDisabled()"
+        (onClick)="prevDay()"
+        pTooltip="Giorno precedente"
+      />
+
+      <div class="date-picker-wrapper">
+        <p-calendar
+          [(ngModel)]="selectedDate"
+          [minDate]="minDate"
+          [maxDate]="maxDate"
+          dateFormat="dd/mm/yy"
+          [showIcon]="true"
+          [readonlyInput]="true"
+          (onSelect)="onDateSelect()"
+          inputId="booking-date"
+        />
+      </div>
+
+      <p-button
+        icon="pi pi-chevron-right"
+        severity="secondary"
+        [outlined]="true"
+        [rounded]="true"
+        [disabled]="isNextDisabled()"
+        (onClick)="nextDay()"
+        pTooltip="Giorno successivo"
+      />
+    </section>
+
+    <!-- Selected date display -->
+    <div class="selected-date-label">
+      <span>{{ getFormattedDate() }}</span>
+      @if (isToday()) {
+        <p-tag value="Oggi" severity="info" />
+      }
+    </div>
+
+    <!-- Schedule grid -->
+    <section class="schedule-section">
+      @if (loadingSchedule) {
+        <div class="schedule-loading">
+          <p-progressSpinner
+            strokeWidth="4"
+            animationDuration="1s"
+            ariaLabel="Caricamento orari"
+          />
+        </div>
+      }
+
+      @if (!loadingSchedule && daySchedule) {
+        @if (daySchedule.slots.length === 0) {
+          <div class="empty-schedule">
+            <i class="pi pi-calendar-times"></i>
+            <p>Nessun orario disponibile per questa data.</p>
+          </div>
+        } @else {
+          <div class="slots-grid">
+            @for (slot of daySchedule.slots; track slot.startTime) {
+              <div
+                [class]="getSlotClass(slot)"
+                (click)="openBookingDialog(slot)"
+                [attr.role]="slot.available && !isSlotPast(slot) ? 'button' : null"
+                [attr.tabindex]="slot.available && !isSlotPast(slot) ? 0 : null"
+                (keydown.enter)="openBookingDialog(slot)"
+              >
+                <span class="slot-time">{{ getSlotLabel(slot) }}</span>
+                <span class="slot-status">{{ getSlotStatus(slot) }}</span>
+                @if (slot.available && !isSlotPast(slot)) {
+                  <span class="slot-action">
+                    <i class="pi pi-plus-circle"></i>
+                    Prenota
+                  </span>
+                }
+              </div>
+            }
+          </div>
+        }
+      }
+
+      @if (!loadingSchedule && !daySchedule) {
+        <div class="empty-schedule">
+          <i class="pi pi-exclamation-triangle"></i>
+          <p>Impossibile caricare gli orari. Riprova.</p>
+          <p-button
+            label="Riprova"
+            icon="pi pi-refresh"
+            severity="secondary"
+            [outlined]="true"
+            (onClick)="onDateSelect()"
+          />
+        </div>
+      }
+    </section>
+
+    <!-- Legend -->
+    <section class="legend">
+      <div class="legend-item">
+        <span class="legend-color legend-available"></span>
+        <span>Disponibile</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-color legend-occupied"></span>
+        <span>Occupato</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-color legend-past"></span>
+        <span>Passato</span>
+      </div>
+    </section>
+  }
+
+  <!-- Court not found state -->
+  @if (!loadingCourt && !court) {
+    <div class="error-state">
+      <i class="pi pi-exclamation-circle"></i>
+      <h2>Campo non trovato</h2>
+      <p>Il campo richiesto non esiste o non e' disponibile.</p>
+      <p-button
+        label="Torna ai campi"
+        icon="pi pi-arrow-left"
+        severity="primary"
+        (onClick)="goBack()"
+      />
+    </div>
+  }
+</main>
+
+<!-- Booking confirmation dialog -->
+<p-dialog
+  header="Conferma prenotazione"
+  [(visible)]="dialogVisible"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '480px' }"
+  [breakpoints]="{ '576px': '95vw' }"
+  (onHide)="closeDialog()"
+>
+  @if (court && selectedSlot) {
+    <div class="booking-dialog-content">
+      <!-- Booking summary -->
+      <div class="booking-summary">
+        <div class="summary-row">
+          <span class="summary-label">Campo</span>
+          <span class="summary-value">{{ court.name }}</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Data</span>
+          <span class="summary-value">{{ getFormattedDate() }}</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Orario</span>
+          <span class="summary-value">{{ getSlotLabel(selectedSlot) }}</span>
+        </div>
+        <div class="summary-row summary-price">
+          <span class="summary-label">Prezzo</span>
+          <span class="summary-value price-highlight">
+            &euro; {{ getBookingPrice() | number:'1.2-2' }}
+          </span>
+        </div>
+        @if (isMember) {
+          <div class="member-badge">
+            <i class="pi pi-star-fill"></i>
+            <span>Tariffa socio applicata</span>
+          </div>
+        }
+      </div>
+
+      <!-- Notes form -->
+      <form [formGroup]="bookingForm" class="booking-form">
+        <div class="form-field">
+          <label for="booking-notes">Note (facoltativo)</label>
+          <textarea
+            pInputTextarea
+            id="booking-notes"
+            formControlName="notes"
+            [rows]="3"
+            placeholder="Aggiungi eventuali note alla prenotazione..."
+            [autoResize]="true"
+          ></textarea>
+        </div>
+      </form>
+    </div>
+  }
+
+  <!-- Dialog footer buttons -->
+  <ng-template pTemplate="footer">
+    <div class="dialog-actions">
+      <p-button
+        label="Annulla"
+        icon="pi pi-times"
+        severity="secondary"
+        [outlined]="true"
+        [disabled]="submitting"
+        (onClick)="closeDialog()"
+      />
+      <p-button
+        label="Conferma prenotazione"
+        icon="pi pi-check"
+        severity="primary"
+        [loading]="submitting"
+        [disabled]="submitting"
+        (onClick)="confirmBooking()"
+      />
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- Page footer -->
+<app-footer />

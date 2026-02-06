@@ -1,0 +1,18 @@
+/* Footer component styles */
+
+:host {
+  display: block;
+  margin-top: auto;
+}
+
+.app-footer {
+  background-color: var(--surface-ground);
+  border-top: 1px solid var(--surface-border);
+  padding: 1.5rem 2rem;
+  text-align: center;
+}
+
+.footer-content {
+  color: var(--text-color-secondary);
+  font-size: 0.875rem;
+}

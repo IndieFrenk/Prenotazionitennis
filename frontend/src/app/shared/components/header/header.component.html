@@ -1,0 +1,52 @@
+<!-- Main navigation bar -->
+<p-menubar [model]="navItems" styleClass="app-menubar">
+  <!-- Brand / logo on the left -->
+  <ng-template pTemplate="start">
+    <a routerLink="/home" class="brand-link">
+      <i class="pi pi-prime brand-icon"></i>
+      <span class="brand-text">Tennis Club</span>
+    </a>
+  </ng-template>
+
+  <!-- Right side: auth buttons or user menu -->
+  <ng-template pTemplate="end">
+    <div class="header-actions">
+      <!-- Guest: show login and register buttons -->
+      @if (!isLoggedIn) {
+        <p-button
+          label="Accedi"
+          icon="pi pi-sign-in"
+          [routerLink]="'/login'"
+          severity="secondary"
+          [text]="true"
+          size="small"
+        />
+        <p-button
+          label="Registrati"
+          icon="pi pi-user-plus"
+          [routerLink]="'/registrazione'"
+          severity="primary"
+          size="small"
+        />
+      }
+
+      <!-- Authenticated: show username with dropdown menu -->
+      @if (isLoggedIn && currentUser) {
+        <p-button
+          [label]="currentUser.username"
+          icon="pi pi-user"
+          severity="secondary"
+          [text]="true"
+          size="small"
+          (onClick)="userMenu.toggle($event)"
+        />
+        <p-menu
+          #userMenu
+          [model]="userMenuItems"
+          [popup]="true"
+          appendTo="body"
+        />
+      }
+    </div>
+  </ng-template>
+</p-menubar>

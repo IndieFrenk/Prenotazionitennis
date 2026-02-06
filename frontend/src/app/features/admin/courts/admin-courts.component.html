@@ -1,0 +1,188 @@
+<!-- Admin Courts List -->
+<p-toast />
+<p-confirmDialog />
+
+<div class="admin-courts">
+  <!-- Page header with title and "New court" button -->
+  <div class="page-header">
+    <div class="page-header__left">
+      <h1>Gestione Campi</h1>
+      <p class="page-subtitle">Visualizza, modifica e gestisci i campi del club</p>
+    </div>
+    <button
+      pButton
+      type="button"
+      label="Nuovo campo"
+      icon="pi pi-plus"
+      severity="success"
+      (click)="createCourt()"
+    ></button>
+  </div>
+
+  <!-- Status filter bar -->
+  <div class="filters-bar">
+    <div class="filter-group">
+      <label for="statusFilter">Filtra per stato:</label>
+      <p-dropdown
+        id="statusFilter"
+        [options]="statusOptions"
+        [(ngModel)]="selectedStatus"
+        (onChange)="onStatusFilterChange()"
+        [style]="{ 'min-width': '200px' }"
+      />
+    </div>
+    <span class="court-count">
+      {{ filteredCourts.length }} campo/i trovato/i
+    </span>
+  </div>
+
+  <!-- Loading spinner -->
+  @if (loading) {
+    <div class="loading-container">
+      <p-progressSpinner strokeWidth="4" animationDuration="1s" />
+      <p>Caricamento campi...</p>
+    </div>
+  }
+
+  <!-- Courts data table -->
+  @if (!loading && filteredCourts.length > 0) {
+    <p-table
+      [value]="filteredCourts"
+      [paginator]="false"
+      styleClass="p-datatable-striped"
+      [tableStyle]="{ 'min-width': '70rem' }"
+      [responsive]="true"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 5rem">Ordine</th>
+          <th pSortableColumn="name">
+            Nome
+            <p-sortIcon field="name" />
+          </th>
+          <th style="width: 8rem">Tipo</th>
+          <th style="width: 9rem">Stato</th>
+          <th pSortableColumn="basePrice">
+            Prezzo base
+            <p-sortIcon field="basePrice" />
+          </th>
+          <th pSortableColumn="memberPrice">
+            Prezzo socio
+            <p-sortIcon field="memberPrice" />
+          </th>
+          <th style="width: 10rem">Orari</th>
+          <th style="width: 12rem">Azioni</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-court let-i="rowIndex">
+        <tr>
+          <!-- Display order with up/down arrows -->
+          <td>
+            <div class="order-controls">
+              <button
+                pButton
+                type="button"
+                icon="pi pi-arrow-up"
+                class="p-button-text p-button-sm p-button-plain"
+                [disabled]="i === 0"
+                (click)="moveUp(court, i)"
+                pTooltip="Sposta su"
+              ></button>
+              <span class="order-number">{{ court.displayOrder }}</span>
+              <button
+                pButton
+                type="button"
+                icon="pi pi-arrow-down"
+                class="p-button-text p-button-sm p-button-plain"
+                [disabled]="i === filteredCourts.length - 1"
+                (click)="moveDown(court, i)"
+                pTooltip="Sposta giu"
+              ></button>
+            </div>
+          </td>
+
+          <!-- Court name -->
+          <td>
+            <span class="court-name">{{ court.name }}</span>
+          </td>
+
+          <!-- Court type tag -->
+          <td>
+            <p-tag
+              [value]="court.type"
+              [severity]="getTypeSeverity(court.type)"
+            />
+          </td>
+
+          <!-- Court status tag -->
+          <td>
+            <p-tag
+              [value]="getStatusLabel(court.status)"
+              [severity]="getStatusSeverity(court.status)"
+            />
+          </td>
+
+          <!-- Base price -->
+          <td>{{ formatCurrency(court.basePrice) }}</td>
+
+          <!-- Member price -->
+          <td>{{ formatCurrency(court.memberPrice) }}</td>
+
+          <!-- Opening / closing hours -->
+          <td>
+            <span class="court-hours">
+              {{ court.openingTime }} - {{ court.closingTime }}
+            </span>
+          </td>
+
+          <!-- Action buttons -->
+          <td>
+            <div class="action-buttons">
+              <button
+                pButton
+                type="button"
+                label="Modifica"
+                icon="pi pi-pencil"
+                class="p-button-sm p-button-outlined"
+                severity="info"
+                (click)="editCourt(court)"
+              ></button>
+              <button
+                pButton
+                type="button"
+                label="Elimina"
+                icon="pi pi-trash"
+                class="p-button-sm p-button-outlined"
+                severity="danger"
+                (click)="confirmDelete(court)"
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="summary">
+        <div class="table-summary">
+          Totale: {{ filteredCourts.length }} campo/i
+        </div>
+      </ng-template>
+    </p-table>
+  }
+
+  <!-- Empty state when no courts match the filter -->
+  @if (!loading && filteredCourts.length === 0) {
+    <div class="empty-state">
+      <i class="pi pi-map"></i>
+      <p>Nessun campo trovato.</p>
+      <button
+        pButton
+        type="button"
+        label="Crea il primo campo"
+        icon="pi pi-plus"
+        severity="success"
+        (click)="createCourt()"
+      ></button>
+    </div>
+  }
+</div>

@@ -1,0 +1,96 @@
+<!-- Page header -->
+<app-header />
+
+<main class="booking-page">
+  <!-- Page title -->
+  <section class="page-header">
+    <h1>Prenota un campo</h1>
+    <p>Seleziona il campo che desideri prenotare</p>
+  </section>
+
+  <!-- Type filter -->
+  <section class="filter-section">
+    <p-selectButton
+      [options]="filterOptions"
+      [(ngModel)]="selectedType"
+      (onChange)="onFilterChange()"
+      optionLabel="label"
+      optionValue="value"
+    />
+  </section>
+
+  <!-- Loading state -->
+  @if (loading) {
+    <app-loading-spinner />
+  }
+
+  <!-- Court cards -->
+  @if (!loading) {
+    @if (filteredCourts.length === 0) {
+      <div class="empty-state">
+        <i class="pi pi-inbox"></i>
+        <p>Nessun campo disponibile per il filtro selezionato.</p>
+      </div>
+    } @else {
+      <section class="courts-grid">
+        <div class="grid">
+          @for (court of filteredCourts; track court.id) {
+            <div class="col-12 md:col-6 lg:col-4">
+              <p-card
+                styleClass="booking-court-card"
+                (click)="selectCourt(court)"
+              >
+                <!-- Court info -->
+                <div class="court-card-content">
+                  <div class="court-card-header">
+                    <h3 class="court-name">{{ court.name }}</h3>
+                    <p-tag
+                      [value]="court.type"
+                      [severity]="getTypeSeverity(court.type)"
+                    />
+                  </div>
+
+                  <!-- Details row -->
+                  <div class="court-details">
+                    <div class="detail-item">
+                      <i class="pi pi-clock"></i>
+                      <span>{{ formatHours(court) }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <i class="pi pi-euro"></i>
+                      <span>{{ getDisplayPrice(court) | number:'1.2-2' }}/h</span>
+                      <small class="price-label">({{ getPriceLabel() }})</small>
+                    </div>
+                  </div>
+
+                  <!-- Show both prices if user is member -->
+                  @if (isMember) {
+                    <div class="member-price-note">
+                      <small>Tariffa standard: &euro; {{ court.basePrice | number:'1.2-2' }}/h</small>
+                    </div>
+                  }
+                </div>
+
+                <!-- Action -->
+                <ng-template pTemplate="footer">
+                  <div class="card-action">
+                    <p-button
+                      label="Seleziona e prenota"
+                      icon="pi pi-calendar-plus"
+                      severity="primary"
+                      styleClass="w-full"
+                      (onClick)="selectCourt(court)"
+                    />
+                  </div>
+                </ng-template>
+              </p-card>
+            </div>
+          }
+        </div>
+      </section>
+    }
+  }
+</main>
+
+<!-- Page footer -->
+<app-footer />

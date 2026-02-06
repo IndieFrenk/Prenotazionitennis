@@ -1,0 +1,149 @@
+/* Booking page styles - court selection */
+
+.booking-page {
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem 3rem;
+  width: 100%;
+}
+
+/* Page header */
+.page-header {
+  text-align: center;
+  padding: 2.5rem 0 1.5rem;
+
+  h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: var(--text-color-secondary);
+    margin: 0;
+  }
+}
+
+/* Filter section */
+.filter-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+/* Courts grid */
+.courts-grid {
+  margin-bottom: 2rem;
+}
+
+/* Court card styling */
+:host ::ng-deep .booking-court-card {
+  height: 100%;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.court-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.court-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.court-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0;
+}
+
+/* Detail items */
+.court-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--surface-border);
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-color);
+  font-size: 0.95rem;
+
+  i {
+    color: var(--primary-color);
+    font-size: 1rem;
+    width: 1.25rem;
+    text-align: center;
+  }
+}
+
+.price-label {
+  color: var(--text-color-secondary);
+  font-size: 0.8rem;
+}
+
+.member-price-note {
+  padding-top: 0.25rem;
+
+  small {
+    color: var(--text-color-secondary);
+    font-size: 0.8rem;
+    text-decoration: line-through;
+  }
+}
+
+/* Card action */
+.card-action {
+  display: flex;
+}
+
+/* Empty state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: var(--text-color-secondary);
+
+  i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 1.1rem;
+    margin: 0;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .court-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

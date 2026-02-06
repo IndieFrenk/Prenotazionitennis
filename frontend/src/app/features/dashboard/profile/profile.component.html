@@ -1,0 +1,208 @@
+<!-- Toast notification container -->
+<p-toast position="top-right" />
+
+<!-- Loading state -->
+@if (loading) {
+  <app-loading-spinner />
+}
+
+<!-- Error state -->
+@if (errorMessage && !loading) {
+  <div class="error-container">
+    <p-message severity="error" [text]="errorMessage" styleClass="w-full" />
+    <p-button
+      label="Riprova"
+      icon="pi pi-refresh"
+      severity="secondary"
+      (onClick)="loadProfile()"
+      styleClass="mt-3"
+    />
+  </div>
+}
+
+<!-- Profile content (visible once loaded) -->
+@if (user && !loading) {
+  <div class="profile-page fade-in">
+    <h2 class="page-title">Il mio profilo</h2>
+
+    <!-- User info card -->
+    <p-card styleClass="profile-card">
+      <div class="profile-info">
+        <!-- Avatar -->
+        <div class="profile-avatar">
+          <i class="pi pi-user"></i>
+        </div>
+
+        <!-- Details grid -->
+        <div class="info-grid">
+          <!-- Username row (editable) -->
+          <div class="info-row">
+            <span class="info-label">Username</span>
+            <div class="info-value">
+              @if (!editingUsername) {
+                <span class="username-display">{{ user.username }}</span>
+                <p-button
+                  label="Modifica"
+                  icon="pi pi-pencil"
+                  severity="secondary"
+                  [text]="true"
+                  size="small"
+                  (onClick)="startEditUsername()"
+                />
+              } @else {
+                <form [formGroup]="usernameForm" (ngSubmit)="saveUsername()" class="username-edit">
+                  <input
+                    type="text"
+                    pInputText
+                    formControlName="username"
+                    placeholder="Nuovo username"
+                    class="username-input"
+                  />
+                  <div class="edit-actions">
+                    <p-button
+                      type="submit"
+                      label="Salva"
+                      icon="pi pi-check"
+                      severity="success"
+                      size="small"
+                      [loading]="savingUsername"
+                      [disabled]="savingUsername"
+                    />
+                    <p-button
+                      type="button"
+                      label="Annulla"
+                      icon="pi pi-times"
+                      severity="secondary"
+                      [text]="true"
+                      size="small"
+                      (onClick)="cancelEditUsername()"
+                      [disabled]="savingUsername"
+                    />
+                  </div>
+                  @if (isFieldInvalid(usernameForm, 'username')) {
+                    <small class="p-error">
+                      @if (usernameForm.get('username')?.hasError('required')) {
+                        Lo username è obbligatorio.
+                      } @else if (usernameForm.get('username')?.hasError('minlength')) {
+                        Lo username deve avere almeno 3 caratteri.
+                      }
+                    </small>
+                  }
+                </form>
+              }
+            </div>
+          </div>
+
+          <!-- Email row -->
+          <div class="info-row">
+            <span class="info-label">Email</span>
+            <span class="info-value">{{ user.email }}</span>
+          </div>
+
+          <!-- Role row -->
+          <div class="info-row">
+            <span class="info-label">Ruolo</span>
+            <span class="info-value">
+              <p-tag
+                [value]="getRoleLabel(user.role)"
+                [severity]="getRoleSeverity(user.role)"
+              />
+            </span>
+          </div>
+
+          <!-- Account status row -->
+          <div class="info-row">
+            <span class="info-label">Stato account</span>
+            <span class="info-value">
+              <p-tag
+                [value]="getStatusLabel(user.accountStatus)"
+                [severity]="getStatusSeverity(user.accountStatus)"
+              />
+            </span>
+          </div>
+
+          <!-- Member since row -->
+          <div class="info-row">
+            <span class="info-label">Membro dal</span>
+            <span class="info-value">{{ formatDate(user.createdAt) }}</span>
+          </div>
+        </div>
+      </div>
+    </p-card>
+
+    <!-- Change password section -->
+    <p-fieldset legend="Modifica Password" [toggleable]="true" [collapsed]="true" styleClass="password-fieldset">
+      <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">
+        <!-- Old password -->
+        <div class="field">
+          <label for="oldPassword">Vecchia password</label>
+          <p-password
+            id="oldPassword"
+            formControlName="oldPassword"
+            placeholder="La tua password attuale"
+            [feedback]="false"
+            [toggleMask]="true"
+            styleClass="w-full"
+            inputStyleClass="w-full"
+          />
+          @if (isFieldInvalid(passwordForm, 'oldPassword')) {
+            <small class="p-error">La vecchia password è obbligatoria.</small>
+          }
+        </div>
+
+        <!-- New password -->
+        <div class="field">
+          <label for="newPassword">Nuova password</label>
+          <p-password
+            id="newPassword"
+            formControlName="newPassword"
+            placeholder="Almeno 8 caratteri"
+            [feedback]="true"
+            [toggleMask]="true"
+            styleClass="w-full"
+            inputStyleClass="w-full"
+          />
+          @if (isFieldInvalid(passwordForm, 'newPassword')) {
+            <small class="p-error">
+              @if (passwordForm.get('newPassword')?.hasError('required')) {
+                La nuova password è obbligatoria.
+              } @else if (passwordForm.get('newPassword')?.hasError('minlength')) {
+                La password deve avere almeno 8 caratteri.
+              }
+            </small>
+          }
+        </div>
+
+        <!-- Confirm new password -->
+        <div class="field">
+          <label for="confirmPassword">Conferma nuova password</label>
+          <p-password
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            placeholder="Ripeti la nuova password"
+            [feedback]="false"
+            [toggleMask]="true"
+            styleClass="w-full"
+            inputStyleClass="w-full"
+          />
+          @if (isFieldInvalid(passwordForm, 'confirmPassword')) {
+            <small class="p-error">La conferma password è obbligatoria.</small>
+          }
+          @if (passwordForm.hasError('passwordMismatch') && passwordForm.get('confirmPassword')?.touched) {
+            <small class="p-error">Le password non corrispondono.</small>
+          }
+        </div>
+
+        <!-- Submit button -->
+        <p-button
+          type="submit"
+          label="Modifica Password"
+          icon="pi pi-lock"
+          severity="primary"
+          [loading]="savingPassword"
+          [disabled]="savingPassword"
+        />
+      </form>
+    </p-fieldset>
+  </div>
+}

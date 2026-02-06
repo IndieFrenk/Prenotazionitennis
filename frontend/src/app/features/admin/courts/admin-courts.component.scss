@@ -1,0 +1,189 @@
+/* ==========================================================================
+   Admin Courts List Styles
+   ========================================================================== */
+
+$mobile-breakpoint: 768px;
+$tablet-breakpoint: 1024px;
+
+/* --------------------------------------------------------------------------
+   Page header
+   -------------------------------------------------------------------------- */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  &__left {
+    flex: 1;
+    min-width: 0;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0 0 0.25rem;
+  }
+
+  .page-subtitle {
+    font-size: 0.95rem;
+    color: var(--text-color-secondary);
+    margin: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Filters bar
+   -------------------------------------------------------------------------- */
+.filters-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  background: var(--surface-color);
+  border-radius: var(--border-radius, 8px);
+  border: 1px solid var(--border-color);
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-color-secondary);
+    white-space: nowrap;
+  }
+}
+
+.court-count {
+  font-size: 0.9rem;
+  color: var(--text-color-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   Loading state
+   -------------------------------------------------------------------------- */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1rem;
+
+  p {
+    color: var(--text-color-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Table overrides
+   -------------------------------------------------------------------------- */
+.court-name {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.court-hours {
+  font-size: 0.9rem;
+  color: var(--text-color-secondary);
+  white-space: nowrap;
+}
+
+/* Display order controls */
+.order-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.order-number {
+  font-weight: 600;
+  font-size: 0.9rem;
+  min-width: 1.5rem;
+  text-align: center;
+  color: var(--text-color);
+}
+
+/* Action buttons row */
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.table-summary {
+  font-size: 0.9rem;
+  color: var(--text-color-secondary);
+  padding: 0.5rem 0;
+}
+
+/* --------------------------------------------------------------------------
+   Empty state
+   -------------------------------------------------------------------------- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius, 8px);
+  gap: 1rem;
+
+  i {
+    font-size: 3rem;
+    color: var(--text-color-secondary);
+  }
+
+  p {
+    color: var(--text-color-secondary);
+    font-size: 1.05rem;
+    margin: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive: tablet
+   -------------------------------------------------------------------------- */
+@media (max-width: $tablet-breakpoint) {
+  .action-buttons {
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive: mobile
+   -------------------------------------------------------------------------- */
+@media (max-width: $mobile-breakpoint) {
+  .page-header {
+    flex-direction: column;
+
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .filters-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

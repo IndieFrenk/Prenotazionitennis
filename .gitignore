@@ -1,0 +1,38 @@
+# Backend
+backend/target/
+backend/*.jar
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/.cache/
+
+# Uploads
+uploads/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+*.env.local
+
+# Docker
+docker-compose.override.yml
+
+# Logs
+*.log
+/.claude/

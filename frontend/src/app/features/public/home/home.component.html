@@ -1,0 +1,79 @@
+<!-- Page header -->
+<app-header />
+
+<main class="home-page">
+  <!-- Hero section with gradient background -->
+  <section class="hero-section">
+    <div class="hero-overlay">
+      <div class="hero-content">
+        <h1 class="hero-title">Benvenuti al Tennis Club</h1>
+        <p class="hero-subtitle">
+          Il tuo circolo di riferimento per tennis e padel.
+          Prenota il tuo campo e gioca con noi!
+        </p>
+        <p-button
+          label="Scopri i campi"
+          icon="pi pi-arrow-right"
+          routerLink="/campi"
+          severity="primary"
+          size="large"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Loading state -->
+  @if (loading) {
+    <app-loading-spinner />
+  }
+
+  <!-- Error state -->
+  @if (errorMessage && !loading) {
+    <div class="error-message">
+      <i class="pi pi-exclamation-triangle"></i>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
+  <!-- Quick links section -->
+  <section class="quick-links-section">
+    <div class="section-header">
+      <h2>Cosa puoi fare</h2>
+    </div>
+    <div class="grid">
+      @for (link of quickLinks; track link.route) {
+        <div class="col-12 md:col-4">
+          <p-card styleClass="quick-link-card">
+            <ng-template pTemplate="header">
+              <div class="card-icon-header">
+                <i [class]="link.icon"></i>
+              </div>
+            </ng-template>
+            <h3>{{ link.title }}</h3>
+            <p>{{ link.description }}</p>
+            <ng-template pTemplate="footer">
+              <p-button
+                [label]="link.title"
+                [routerLink]="link.route"
+                severity="primary"
+                [outlined]="true"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+              />
+            </ng-template>
+          </p-card>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- CMS content section -->
+  @if (page && !loading) {
+    <section class="cms-content-section">
+      <div class="cms-content" [innerHTML]="page.contentHtml"></div>
+    </section>
+  }
+</main>
+
+<!-- Page footer -->
+<app-footer />

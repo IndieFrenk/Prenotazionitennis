@@ -1,0 +1,207 @@
+<!-- Toast and confirmation dialog -->
+<p-toast position="top-right" />
+<p-confirmDialog />
+
+<!-- Loading state -->
+@if (loading) {
+  <app-loading-spinner />
+}
+
+<!-- Error state -->
+@if (errorMessage && !loading) {
+  <div class="error-container">
+    <p-button
+      label="Riprova"
+      icon="pi pi-refresh"
+      severity="secondary"
+      (onClick)="loadReservations()"
+    />
+    <p class="error-text">{{ errorMessage }}</p>
+  </div>
+}
+
+<!-- Reservations content -->
+@if (!loading && !errorMessage) {
+  <div class="reservations-page fade-in">
+    <div class="page-header">
+      <h2 class="page-title">Le mie prenotazioni</h2>
+      <p-button
+        label="Prenota un campo"
+        icon="pi pi-plus"
+        severity="success"
+        routerLink="/prenotazioni"
+      />
+    </div>
+
+    <!-- Status filter -->
+    <div class="filter-bar">
+      <p-selectButton
+        [options]="statusOptions"
+        [(ngModel)]="selectedStatus"
+        optionLabel="label"
+        optionValue="value"
+        (onChange)="onStatusFilterChange()"
+      />
+    </div>
+
+    <!-- Empty state -->
+    @if (filteredReservations.length === 0 && reservations.length === 0) {
+      <div class="empty-state">
+        <i class="pi pi-calendar empty-icon"></i>
+        <h3>Non hai ancora prenotazioni</h3>
+        <p>Prenota un campo per iniziare a giocare!</p>
+        <p-button
+          label="Prenota un campo"
+          icon="pi pi-plus"
+          severity="success"
+          routerLink="/prenotazioni"
+        />
+      </div>
+    }
+
+    <!-- No results for current filter -->
+    @if (filteredReservations.length === 0 && reservations.length > 0) {
+      <div class="empty-state">
+        <i class="pi pi-filter empty-icon"></i>
+        <h3>Nessuna prenotazione trovata</h3>
+        <p>Non ci sono prenotazioni con lo stato selezionato.</p>
+      </div>
+    }
+
+    <!-- Desktop: DataTable view -->
+    @if (filteredReservations.length > 0) {
+      <div class="table-view">
+        <p-table
+          [value]="filteredReservations"
+          [responsive]="true"
+          styleClass="p-datatable-sm"
+          [rowHover]="true"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Campo</th>
+              <th>Data</th>
+              <th>Orario</th>
+              <th>Stato</th>
+              <th>Prezzo</th>
+              <th>Azioni</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-reservation>
+            <tr>
+              <!-- Court name + type badge -->
+              <td>
+                <div class="court-cell">
+                  <span class="court-name">{{ reservation.courtName }}</span>
+                  <p-tag
+                    [value]="getCourtTypeLabel(reservation.courtType)"
+                    [severity]="getCourtTypeSeverity(reservation.courtType)"
+                    styleClass="court-type-tag"
+                  />
+                </div>
+              </td>
+              <!-- Formatted date -->
+              <td>{{ formatDate(reservation.reservationDate) }}</td>
+              <!-- Time range -->
+              <td>{{ formatTimeRange(reservation.startTime, reservation.endTime) }}</td>
+              <!-- Status tag -->
+              <td>
+                <p-tag
+                  [value]="getStatusLabel(reservation.status)"
+                  [severity]="getStatusSeverity(reservation.status)"
+                />
+              </td>
+              <!-- Price -->
+              <td>{{ formatPrice(reservation.paidPrice) }}</td>
+              <!-- Actions -->
+              <td>
+                @if (canCancel(reservation)) {
+                  <p-button
+                    label="Cancella"
+                    icon="pi pi-times"
+                    severity="danger"
+                    [text]="true"
+                    size="small"
+                    [loading]="cancellingId === reservation.id"
+                    [disabled]="cancellingId !== null"
+                    (onClick)="confirmCancel(reservation)"
+                  />
+                } @else {
+                  <span class="no-actions">-</span>
+                }
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="6" class="text-center">Nessuna prenotazione trovata.</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+      <!-- Mobile: Card-based list view -->
+      <div class="card-view">
+        @for (reservation of filteredReservations; track reservation.id) {
+          <p-card styleClass="reservation-card">
+            <div class="card-row card-header-row">
+              <span class="court-name">{{ reservation.courtName }}</span>
+              <p-tag
+                [value]="getStatusLabel(reservation.status)"
+                [severity]="getStatusSeverity(reservation.status)"
+              />
+            </div>
+            <div class="card-details">
+              <div class="card-detail">
+                <i class="pi pi-tag"></i>
+                <p-tag
+                  [value]="getCourtTypeLabel(reservation.courtType)"
+                  [severity]="getCourtTypeSeverity(reservation.courtType)"
+                />
+              </div>
+              <div class="card-detail">
+                <i class="pi pi-calendar"></i>
+                <span>{{ formatDate(reservation.reservationDate) }}</span>
+              </div>
+              <div class="card-detail">
+                <i class="pi pi-clock"></i>
+                <span>{{ formatTimeRange(reservation.startTime, reservation.endTime) }}</span>
+              </div>
+              <div class="card-detail">
+                <i class="pi pi-euro"></i>
+                <span>{{ formatPrice(reservation.paidPrice) }}</span>
+              </div>
+            </div>
+            @if (canCancel(reservation)) {
+              <div class="card-actions">
+                <p-button
+                  label="Cancella prenotazione"
+                  icon="pi pi-times"
+                  severity="danger"
+                  [outlined]="true"
+                  size="small"
+                  [loading]="cancellingId === reservation.id"
+                  [disabled]="cancellingId !== null"
+                  (onClick)="confirmCancel(reservation)"
+                  styleClass="w-full"
+                />
+              </div>
+            }
+          </p-card>
+        }
+      </div>
+
+      <!-- Paginator -->
+      @if (totalRecords > pageSize) {
+        <p-paginator
+          [rows]="pageSize"
+          [totalRecords]="totalRecords"
+          [rowsPerPageOptions]="[5, 10, 20]"
+          [first]="currentPage * pageSize"
+          (onPageChange)="onPageChange($event)"
+          styleClass="reservations-paginator"
+        />
+      }
+    }
+  </div>
+}

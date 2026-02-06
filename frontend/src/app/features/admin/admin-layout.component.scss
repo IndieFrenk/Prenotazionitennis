@@ -1,0 +1,202 @@
+/* ==========================================================================
+   Admin Layout Styles
+   ========================================================================== */
+
+$sidebar-width: 280px;
+$mobile-breakpoint: 768px;
+
+/* --------------------------------------------------------------------------
+   Layout container
+   -------------------------------------------------------------------------- */
+.admin-layout {
+  display: flex;
+  min-height: calc(100vh - 140px);
+  background: var(--bg-color);
+}
+
+/* --------------------------------------------------------------------------
+   Mobile top bar (hidden on desktop)
+   -------------------------------------------------------------------------- */
+.mobile-topbar {
+  display: none;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--surface-color);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  .mobile-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-color);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Sidebar overlay (mobile only)
+   -------------------------------------------------------------------------- */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 99;
+}
+
+/* --------------------------------------------------------------------------
+   Sidebar
+   -------------------------------------------------------------------------- */
+.sidebar {
+  width: $sidebar-width;
+  min-width: $sidebar-width;
+  background: var(--surface-color);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 0;
+  position: sticky;
+  top: 0;
+  height: fit-content;
+  min-height: calc(100vh - 140px);
+}
+
+/* Admin user info block at top of sidebar */
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 1.25rem 1.25rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--red-500, #ef4444);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  i {
+    font-size: 1.25rem;
+    color: #fff;
+  }
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  overflow: hidden;
+}
+
+.user-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --------------------------------------------------------------------------
+   Navigation items
+   -------------------------------------------------------------------------- */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  color: var(--text-color-secondary);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all var(--transition-duration, 0.2s) ease;
+  border-left: 3px solid transparent;
+
+  i {
+    font-size: 1.1rem;
+    width: 1.25rem;
+    text-align: center;
+  }
+
+  &:hover {
+    background: rgba(46, 125, 50, 0.06);
+    color: var(--primary-color);
+  }
+
+  &.active {
+    background: rgba(46, 125, 50, 0.1);
+    color: var(--primary-color);
+    border-left-color: var(--primary-color);
+    font-weight: 600;
+  }
+}
+
+.nav-separator {
+  height: 1px;
+  background: var(--border-color);
+  margin: 0.5rem 1.25rem;
+}
+
+/* --------------------------------------------------------------------------
+   Main content area
+   -------------------------------------------------------------------------- */
+.admin-content {
+  flex: 1;
+  padding: 2rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive: mobile layout
+   -------------------------------------------------------------------------- */
+@media (max-width: $mobile-breakpoint) {
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  .mobile-topbar {
+    display: flex;
+  }
+
+  .sidebar-overlay {
+    display: block;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -$sidebar-width;
+    height: 100vh;
+    min-height: 100vh;
+    z-index: 100;
+    transition: left 0.3s ease;
+    box-shadow: none;
+
+    &.open {
+      left: 0;
+      box-shadow: var(--shadow-lg, 0 10px 25px rgba(0, 0, 0, 0.15));
+    }
+  }
+
+  .admin-content {
+    padding: 1.25rem 1rem;
+  }
+}

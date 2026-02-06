@@ -1,0 +1,199 @@
+<!-- Admin Dashboard Overview -->
+<div class="admin-dashboard">
+  <!-- Page title -->
+  <div class="page-header">
+    <h1>Panoramica</h1>
+    <p class="page-subtitle">Statistiche e dati del club</p>
+  </div>
+
+  <!-- Date range filters -->
+  <div class="filters-bar">
+    <!-- Quick filter buttons -->
+    <div class="quick-filters">
+      <button
+        pButton
+        type="button"
+        label="Oggi"
+        [outlined]="activeFilter !== 'today'"
+        severity="success"
+        size="small"
+        (click)="applyFilter('today')"
+      ></button>
+      <button
+        pButton
+        type="button"
+        label="Questa settimana"
+        [outlined]="activeFilter !== 'week'"
+        severity="success"
+        size="small"
+        (click)="applyFilter('week')"
+      ></button>
+      <button
+        pButton
+        type="button"
+        label="Questo mese"
+        [outlined]="activeFilter !== 'month'"
+        severity="success"
+        size="small"
+        (click)="applyFilter('month')"
+      ></button>
+      <button
+        pButton
+        type="button"
+        label="Quest'anno"
+        [outlined]="activeFilter !== 'year'"
+        severity="success"
+        size="small"
+        (click)="applyFilter('year')"
+      ></button>
+    </div>
+
+    <!-- Calendar date range picker -->
+    <div class="date-picker">
+      <p-calendar
+        [(ngModel)]="dateRange"
+        selectionMode="range"
+        [readonlyInput]="true"
+        [showIcon]="true"
+        [maxDate]="maxDate"
+        dateFormat="dd/mm/yy"
+        placeholder="Seleziona periodo"
+        (onClose)="onDateRangeChange()"
+      />
+    </div>
+  </div>
+
+  <!-- Loading spinner -->
+  @if (loading) {
+    <div class="loading-container">
+      <p-progressSpinner
+        strokeWidth="4"
+        animationDuration="1s"
+      />
+      <p>Caricamento statistiche...</p>
+    </div>
+  }
+
+  <!-- Dashboard content (visible when not loading and stats are available) -->
+  @if (!loading && stats) {
+    <!-- Stats summary cards -->
+    <div class="stats-grid">
+      <!-- Reservations today -->
+      <p-card styleClass="stat-card">
+        <div class="stat-card-body">
+          <div class="stat-icon stat-icon--reservations">
+            <i class="pi pi-calendar"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Prenotazioni oggi</span>
+            <span class="stat-value">{{ stats.totalReservationsToday }}</span>
+          </div>
+        </div>
+      </p-card>
+
+      <!-- Reservations this week -->
+      <p-card styleClass="stat-card">
+        <div class="stat-card-body">
+          <div class="stat-icon stat-icon--week">
+            <i class="pi pi-calendar-plus"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Prenotazioni settimana</span>
+            <span class="stat-value">{{ stats.totalReservationsWeek }}</span>
+          </div>
+        </div>
+      </p-card>
+
+      <!-- Reservations this month -->
+      <p-card styleClass="stat-card">
+        <div class="stat-card-body">
+          <div class="stat-icon stat-icon--month">
+            <i class="pi pi-chart-line"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Prenotazioni mese</span>
+            <span class="stat-value">{{ stats.totalReservationsMonth }}</span>
+          </div>
+        </div>
+      </p-card>
+
+      <!-- Total revenue -->
+      <p-card styleClass="stat-card">
+        <div class="stat-card-body">
+          <div class="stat-icon stat-icon--revenue">
+            <i class="pi pi-euro"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Ricavo totale</span>
+            <span class="stat-value stat-value--currency">{{ formatCurrency(stats.totalRevenue) }}</span>
+          </div>
+        </div>
+      </p-card>
+    </div>
+
+    <!-- Court usage chart -->
+    @if (stats.courtUsageStats.length > 0) {
+      <div class="chart-section">
+        <h2>Utilizzo campi</h2>
+        <div class="chart-container">
+          <p-chart
+            type="bar"
+            [data]="chartData"
+            [options]="chartOptions"
+          />
+        </div>
+      </div>
+    }
+
+    <!-- Court usage data table -->
+    @if (stats.courtUsageStats.length > 0) {
+      <div class="table-section">
+        <h2>Dettaglio per campo</h2>
+        <p-table
+          [value]="stats.courtUsageStats"
+          [paginator]="false"
+          [rows]="10"
+          styleClass="p-datatable-striped"
+          [tableStyle]="{ 'min-width': '40rem' }"
+          [responsive]="true"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Campo</th>
+              <th pSortableColumn="reservationCount">
+                Prenotazioni
+                <p-sortIcon field="reservationCount" />
+              </th>
+              <th pSortableColumn="revenue">
+                Ricavo
+                <p-sortIcon field="revenue" />
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-court>
+            <tr>
+              <td>{{ court.courtName }}</td>
+              <td>
+                <p-tag [value]="court.reservationCount.toString()" severity="info" />
+              </td>
+              <td>{{ formatCurrency(court.revenue) }}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="summary">
+            <div class="table-summary">
+              Totale campi: {{ stats.courtUsageStats.length }}
+            </div>
+          </ng-template>
+        </p-table>
+      </div>
+    }
+
+    <!-- Empty state when no court stats are available -->
+    @if (stats.courtUsageStats.length === 0) {
+      <div class="empty-state">
+        <i class="pi pi-info-circle"></i>
+        <p>Nessun dato disponibile per il periodo selezionato.</p>
+      </div>
+    }
+  }
+</div>

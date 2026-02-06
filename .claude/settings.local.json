@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls \"C:\\\\Users\\\\frenk\\\\Documents\\\\Tennis\\\\backend\\\\src\\\\main\\\\java\\\\com\\\\tennisclub\\\\model\"\" 2>nul || echo \"Directory does not exist \")",
+      "Bash(ls \"C:\\\\Users\\\\frenk\\\\Documents\\\\Tennis\\\\backend\\\\src\\\\main\\\\java\\\\com\\\\tennisclub\\\\repository\"\" 2>nul || echo \"Directory does not exist \")",
+      "Bash(if not exist \"C:\\\\Users\\\\frenk\\\\Documents\\\\Tennis\\\\backend\\\\src\\\\main\\\\java\\\\com\\\\tennisclub\\\\service\" mkdir \"C:\\\\Users\\\\frenk\\\\Documents\\\\Tennis\\\\backend\\\\src\\\\main\\\\java\\\\com\\\\tennisclub\\\\service\")",
+      "Bash(ls \"C:\\\\Users\\\\frenk\\\\Documents\\\\Tennis\\\\frontend\\\\src\\\\environments\"\" 2>/dev/null || echo \"No environments dir \")",
+      "Bash(dir:*)",
+      "Bash(docker-compose build:*)",
+      "Bash(npm install:*)",
+      "Bash(npx ng build:*)",
+      "Bash(docker-compose up:*)",
+      "Bash(docker ps:*)",
+      "Bash(docker logs:*)",
+      "Bash(curl:*)",
+      "Bash(python3:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker run --rm eclipse-temurin:21-jdk sh -c 'cat > /tmp/GenHash.java << ''''EOF''''\nimport org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;\npublic class GenHash {\n    public static void main\\(String[] args\\) {\n        System.out.println\\(new BCryptPasswordEncoder\\(\\).encode\\(\"\"Admin123!\"\"\\)\\);\n    }\n}\nEOF\ncd /tmp && javac -cp /dev/null GenHash.java 2>&1 || echo \"\"Need spring jar...\"\"')",
+      "Bash(docker run:*)",
+      "Bash(docker cp:*)",
+      "Bash(echo:*)",
+      "Bash(python -c \"import sys,json; print\\(json.load\\(sys.stdin\\)[''accessToken'']\\)\")",
+      "Bash(TOKEN=\"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkB0ZW5uaXNjbHViLml0IiwidXNlcklkIjoiYTAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAxIiwicm9sZSI6IlJPTEVfQURNSU4iLCJpYXQiOjE3NzAwNjQ2MTMsImV4cCI6MTc3MDA2NTUxM30.WGrfJrtEqos7HaxDVroXMnyB0Q2UDw9oAbJ1eU8irg95BdgrNOCsdz8bwf-zq1_8DVgOOTAwfuyNlEmxAm9z9g\")",
+      "Bash(python -m json.tool:*)",
+      "Bash(docker info:*)",
+      "Bash(docker restart:*)",
+      "Bash(printf:*)",
+      "Bash(docker compose build:*)",
+      "Bash(docker compose:*)"
+    ]
+  }
+}

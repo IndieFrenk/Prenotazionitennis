@@ -1,0 +1,95 @@
+/* Verify email page styles */
+
+.verify-email-page {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  min-height: calc(100vh - 200px);
+}
+
+.verify-container {
+  width: 100%;
+  max-width: 500px;
+}
+
+:host ::ng-deep .verify-card {
+  .p-card-body {
+    padding: 2.5rem;
+  }
+}
+
+.status-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0;
+  }
+
+  p {
+    color: var(--text-color-secondary);
+    font-size: 1rem;
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  > i {
+    font-size: 4rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &.success > i {
+    color: var(--green-500);
+  }
+
+  &.error > i {
+    color: var(--red-500);
+  }
+}
+
+:host ::ng-deep .verify-spinner {
+  width: 4rem;
+  height: 4rem;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .verify-email-page {
+    padding: 1rem;
+  }
+
+  :host ::ng-deep .verify-card {
+    .p-card-body {
+      padding: 1.5rem;
+    }
+  }
+
+  .status-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    width: 100%;
+
+    :host ::ng-deep .p-button {
+      width: 100%;
+    }
+  }
+}

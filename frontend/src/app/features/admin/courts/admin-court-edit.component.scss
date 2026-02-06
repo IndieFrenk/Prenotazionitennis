@@ -1,0 +1,308 @@
+/* ==========================================================================
+   Admin Court Edit / Create Styles
+   ========================================================================== */
+
+$mobile-breakpoint: 768px;
+$tablet-breakpoint: 1024px;
+
+/* --------------------------------------------------------------------------
+   Page header
+   -------------------------------------------------------------------------- */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  &__left {
+    flex: 1;
+    min-width: 0;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0 0 0.25rem;
+  }
+
+  .page-subtitle {
+    font-size: 0.95rem;
+    color: var(--text-color-secondary);
+    margin: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Loading state
+   -------------------------------------------------------------------------- */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1rem;
+
+  p {
+    color: var(--text-color-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Form card
+   -------------------------------------------------------------------------- */
+:host ::ng-deep .form-card {
+  margin-bottom: 1.5rem;
+
+  .p-card-body {
+    padding: 1.5rem;
+  }
+
+  .p-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Form grid layout
+   -------------------------------------------------------------------------- */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-color);
+  }
+
+  input,
+  textarea {
+    width: 100%;
+  }
+
+  .p-error {
+    font-size: 0.8rem;
+  }
+
+  /* Full-width field spanning all columns */
+  &--full {
+    grid-column: 1 / -1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Form action buttons
+   -------------------------------------------------------------------------- */
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-color);
+}
+
+/* --------------------------------------------------------------------------
+   Photo management
+   -------------------------------------------------------------------------- */
+.photos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.photo-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: var(--surface-ground, #f8f9fa);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius, 8px);
+  align-items: center;
+}
+
+.photo-thumbnail {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 6px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.photo-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  text-align: center;
+  width: 100%;
+}
+
+.photo-alt {
+  font-size: 0.85rem;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.photo-order {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+/* No photos placeholder */
+.no-photos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+
+  i {
+    font-size: 2rem;
+    color: var(--text-color-secondary);
+  }
+
+  p {
+    color: var(--text-color-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Upload section
+   -------------------------------------------------------------------------- */
+.upload-section {
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.25rem;
+
+  h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0 0 1rem;
+  }
+}
+
+.upload-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  gap: 0.5rem;
+
+  i {
+    font-size: 2.5rem;
+    color: var(--text-color-secondary);
+  }
+
+  p {
+    color: var(--text-color-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  small {
+    color: var(--text-color-secondary);
+    font-size: 0.8rem;
+  }
+}
+
+/* Max photos warning */
+.max-photos-warning {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  margin-top: 1rem;
+  background: rgba(255, 152, 0, 0.08);
+  border: 1px solid rgba(255, 152, 0, 0.3);
+  border-radius: var(--border-radius, 8px);
+  color: var(--text-color);
+
+  i {
+    font-size: 1.25rem;
+    color: var(--orange-500, #ff9800);
+    flex-shrink: 0;
+  }
+
+  span {
+    font-size: 0.9rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive: tablet
+   -------------------------------------------------------------------------- */
+@media (max-width: $tablet-breakpoint) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive: mobile
+   -------------------------------------------------------------------------- */
+@media (max-width: $mobile-breakpoint) {
+  .page-header {
+    flex-direction: column;
+
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .upload-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .photos-grid {
+    grid-template-columns: 1fr;
+  }
+}
