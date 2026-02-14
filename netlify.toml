@@ -1,7 +1,9 @@
 # Netlify configuration for Tennis Club Frontend
 
 [build]
-  # Directory containing the deploy-ready HTML files
+  # Base directory (where package.json is)
+  base = "frontend"
+  # Directory containing the deploy-ready HTML files (relative to base)
   publish = "dist/tennis-club-frontend/browser"
   # Build command
   command = "npm install --legacy-peer-deps && npm run build -- --configuration=production"

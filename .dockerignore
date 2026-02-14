@@ -1,0 +1,7 @@
+frontend/
+.git/
+.claude/
+*.md
+docker-compose.yml
+netlify.toml
+nul
