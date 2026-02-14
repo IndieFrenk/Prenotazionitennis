@@ -10,4 +10,7 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 RUN mkdir -p /app/uploads
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+# Use production profile; Render injects PORT
+ENV SPRING_PROFILES_ACTIVE=prod
+ENTRYPOINT ["java", "-Xmx512m", "-jar", "app.jar"]
