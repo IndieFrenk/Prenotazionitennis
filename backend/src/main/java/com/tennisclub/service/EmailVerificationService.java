@@ -8,10 +8,12 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,9 +28,8 @@ public class EmailVerificationService {
 
     private final EmailVerificationTokenRepository tokenRepository;
     private final UserRepository userRepository;
-    private final JavaMailSender mailSender;
 
-    @Value("${app.email.from:noreply@tennisclub.it}")
+    @Value("${app.email.from:onboarding@resend.dev}")
     private String fromEmail;
 
     @Value("${app.base-url:http://localhost:3000}")
@@ -37,13 +38,14 @@ public class EmailVerificationService {
     @Value("${app.email.verification.expiration-hours:24}")
     private int expirationHours;
 
+    @Value("${RESEND_API_KEY:}")
+    private String resendApiKey;
+
     public EmailVerificationService(
             EmailVerificationTokenRepository tokenRepository,
-            UserRepository userRepository,
-            JavaMailSender mailSender) {
+            UserRepository userRepository) {
         this.tokenRepository = tokenRepository;
         this.userRepository = userRepository;
-        this.mailSender = mailSender;
     }
 
     /**
@@ -138,22 +140,41 @@ public class EmailVerificationService {
     }
 
     /**
-     * Send the verification email to the user.
+     * Send the verification email via Resend HTTP API.
      */
     private void sendVerificationEmail(User user, String token) {
         String verificationUrl = baseUrl + "/auth/verifica-email?token=" + token;
+        String body = buildEmailBody(user.getUsername(), verificationUrl);
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(fromEmail);
-        message.setTo(user.getEmail());
-        message.setSubject("Tennis Club - Conferma la tua email");
-        message.setText(buildEmailBody(user.getUsername(), verificationUrl));
+        if (resendApiKey == null || resendApiKey.isBlank()) {
+            log.warn("RESEND_API_KEY not configured, skipping email to {}", user.getEmail());
+            return;
+        }
 
         try {
-            mailSender.send(message);
+            String jsonPayload = String.format("""
+                    {"from":"%s","to":["%s"],"subject":"Tennis Club - Conferma la tua email","text":"%s"}""",
+                    fromEmail,
+                    user.getEmail(),
+                    body.replace("\"", "\\\"").replace("\n", "\\n"));
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://api.resend.com/emails"))
+                    .header("Authorization", "Bearer " + resendApiKey)
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                log.info("Verification email sent via Resend to: {}", user.getEmail());
+            } else {
+                log.error("Resend API error ({}): {}", response.statusCode(), response.body());
+            }
         } catch (Exception e) {
             log.error("Failed to send verification email to {}: {}", user.getEmail(), e.getMessage());
-            // Don't throw - registration should complete even if email fails
         }
     }
 
