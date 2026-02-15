@@ -1,39 +1,36 @@
 package com.tennisclub.service;
 
 import com.tennisclub.dto.ContactFormRequest;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailException;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 /**
  * Service responsible for sending emails from the application.
  * Handles contact form submissions and password reset notifications.
+ * Uses Resend HTTP API for email delivery in production.
  * Email failures are logged but never propagated to callers, so that
  * the main business flow is not interrupted by mail issues.
  */
 @Service
-@RequiredArgsConstructor
 public class EmailService {
 
     private static final Logger log = LoggerFactory.getLogger(EmailService.class);
 
-    private final JavaMailSender mailSender;
-
-    @Value("${spring.mail.username:}")
+    @Value("${app.email.from:onboarding@resend.dev}")
     private String fromEmail;
+
+    @Value("${RESEND_API_KEY:}")
+    private String resendApiKey;
 
     /**
      * Sends an email to the club address containing a contact form submission.
-     * The sender's name and email are included in the message body.
-     *
-     * @param request the contact form request containing name, email, and message
      */
     public void sendContactFormEmail(ContactFormRequest request) {
         String subject = "Nuovo messaggio dal modulo di contatto - " + request.name();
@@ -43,9 +40,6 @@ public class EmailService {
 
     /**
      * Sends a password reset email containing a link with the reset token.
-     *
-     * @param toEmail    the recipient email address
-     * @param resetToken the password reset token to embed in the link
      */
     public void sendPasswordResetEmail(String toEmail, String resetToken) {
         String subject = "Tennis Club - Recupero password";
@@ -66,13 +60,6 @@ public class EmailService {
         sendHtmlEmail(toEmail, subject, body);
     }
 
-    // -----------------------------------------------------------------------
-    // Private helpers
-    // -----------------------------------------------------------------------
-
-    /**
-     * Builds the HTML body for a contact form email.
-     */
     private String buildContactFormBody(ContactFormRequest request) {
         return """
                 <html>
@@ -88,25 +75,38 @@ public class EmailService {
     }
 
     /**
-     * Creates and sends an HTML MimeMessage. Catches and logs any mail-related
-     * exceptions without re-throwing, ensuring that email failures do not
-     * break the calling business flow.
-     *
-     * @param to      the recipient email address
-     * @param subject the email subject line
-     * @param body    the HTML body content
+     * Sends an HTML email via Resend HTTP API.
      */
-    private void sendHtmlEmail(String to, String subject, String body) {
+    private void sendHtmlEmail(String to, String subject, String htmlBody) {
+        if (resendApiKey == null || resendApiKey.isBlank()) {
+            log.warn("RESEND_API_KEY not configured, skipping email to {}", to);
+            return;
+        }
+
         try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-            helper.setFrom(fromEmail);
-            helper.setTo(to);
-            helper.setSubject(subject);
-            helper.setText(body, true);
-            mailSender.send(message);
-            log.info("Email sent successfully to {}", to);
-        } catch (MessagingException | MailException e) {
+            String escapedSubject = subject.replace("\"", "\\\"");
+            String escapedBody = htmlBody.replace("\"", "\\\"").replace("\n", "\\n");
+
+            String jsonPayload = String.format(
+                    "{\"from\":\"%s\",\"to\":[\"%s\"],\"subject\":\"%s\",\"html\":\"%s\"}",
+                    fromEmail, to, escapedSubject, escapedBody);
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://api.resend.com/emails"))
+                    .header("Authorization", "Bearer " + resendApiKey)
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                log.info("Email sent via Resend to: {}", to);
+            } else {
+                log.error("Resend API error ({}): {}", response.statusCode(), response.body());
+            }
+        } catch (Exception e) {
             log.error("Failed to send email to {}: {}", to, e.getMessage());
         }
     }
