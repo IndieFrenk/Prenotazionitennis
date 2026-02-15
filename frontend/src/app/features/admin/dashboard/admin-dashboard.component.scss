@@ -55,11 +55,17 @@ $tablet-breakpoint: 1024px;
    Loading state
    -------------------------------------------------------------------------- */
 .loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem 2rem;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 9999;
   gap: 1rem;
 
   p {

@@ -237,10 +237,10 @@ export class ProfileComponent implements OnInit {
    */
   getStatusLabel(status: string): string {
     switch (status) {
-      case 'ACTIVE':
+      case 'ATTIVO':
         return 'Attivo';
-      case 'DISABLED':
-        return 'Disabilitato';
+      case 'SOSPESO':
+        return 'Sospeso';
       default:
         return status;
     }
@@ -251,9 +251,9 @@ export class ProfileComponent implements OnInit {
    */
   getStatusSeverity(status: string): 'success' | 'danger' | 'info' | 'warn' | 'secondary' | 'contrast' | undefined {
     switch (status) {
-      case 'ACTIVE':
+      case 'ATTIVO':
         return 'success';
-      case 'DISABLED':
+      case 'SOSPESO':
         return 'danger';
       default:
         return 'info';
