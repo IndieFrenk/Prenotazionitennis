@@ -91,7 +91,7 @@
           <p-password
             id="password"
             formControlName="password"
-            placeholder="Almeno 8 caratteri"
+            placeholder="Minimo 8 caratteri con maiuscola, numero e simbolo"
             [toggleMask]="true"
             [feedback]="true"
             styleClass="w-full"
@@ -107,6 +107,8 @@
                 La password è obbligatoria.
               } @else if (registerForm.get('password')?.hasError('minlength')) {
                 La password deve contenere almeno 8 caratteri.
+              } @else if (registerForm.get('password')?.hasError('pattern')) {
+                La password deve contenere almeno una maiuscola, una minuscola, un numero e un carattere speciale.
               }
             </small>
           }

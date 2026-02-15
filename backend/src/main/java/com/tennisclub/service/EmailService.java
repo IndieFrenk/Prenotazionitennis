@@ -1,6 +1,9 @@
 package com.tennisclub.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tennisclub.dto.ContactFormRequest;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +13,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Service responsible for sending emails from the application.
@@ -22,6 +27,7 @@ import java.net.http.HttpResponse;
 public class EmailService {
 
     private static final Logger log = LoggerFactory.getLogger(EmailService.class);
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Value("${app.email.from:onboarding@resend.dev}")
     private String fromEmail;
@@ -33,7 +39,8 @@ public class EmailService {
      * Sends an email to the club address containing a contact form submission.
      */
     public void sendContactFormEmail(ContactFormRequest request) {
-        String subject = "Nuovo messaggio dal modulo di contatto - " + request.name();
+        String safeName = Jsoup.clean(request.name(), Safelist.none());
+        String subject = "Nuovo messaggio dal modulo di contatto - " + safeName;
         String body = buildContactFormBody(request);
         sendHtmlEmail(fromEmail, subject, body);
     }
@@ -56,11 +63,14 @@ public class EmailService {
                     <p>Tennis Club</p>
                 </body>
                 </html>
-                """.formatted(resetToken);
+                """.formatted(Jsoup.clean(resetToken, Safelist.none()));
         sendHtmlEmail(toEmail, subject, body);
     }
 
     private String buildContactFormBody(ContactFormRequest request) {
+        String safeName = Jsoup.clean(request.name(), Safelist.none());
+        String safeEmail = Jsoup.clean(request.email(), Safelist.none());
+        String safeMessage = Jsoup.clean(request.message(), Safelist.none());
         return """
                 <html>
                 <body>
@@ -71,11 +81,11 @@ public class EmailService {
                     <p>%s</p>
                 </body>
                 </html>
-                """.formatted(request.name(), request.email(), request.message());
+                """.formatted(safeName, safeEmail, safeMessage);
     }
 
     /**
-     * Sends an HTML email via Resend HTTP API.
+     * Sends an HTML email via Resend HTTP API using Jackson for JSON serialization.
      */
     private void sendHtmlEmail(String to, String subject, String htmlBody) {
         if (resendApiKey == null || resendApiKey.isBlank()) {
@@ -84,12 +94,13 @@ public class EmailService {
         }
 
         try {
-            String escapedSubject = subject.replace("\"", "\\\"");
-            String escapedBody = htmlBody.replace("\"", "\\\"").replace("\n", "\\n");
-
-            String jsonPayload = String.format(
-                    "{\"from\":\"%s\",\"to\":[\"%s\"],\"subject\":\"%s\",\"html\":\"%s\"}",
-                    fromEmail, to, escapedSubject, escapedBody);
+            Map<String, Object> payload = Map.of(
+                    "from", fromEmail,
+                    "to", List.of(to),
+                    "subject", subject,
+                    "html", htmlBody
+            );
+            String jsonPayload = objectMapper.writeValueAsString(payload);
 
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()

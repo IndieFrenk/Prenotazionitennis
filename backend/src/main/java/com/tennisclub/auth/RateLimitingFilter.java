@@ -48,7 +48,9 @@ public class RateLimitingFilter extends OncePerRequestFilter {
      */
     private static final List<String> RATE_LIMITED_PATHS = List.of(
             "/api/auth/login",
-            "/api/auth/forgot-password"
+            "/api/auth/forgot-password",
+            "/api/auth/register",
+            "/api/auth/resend-verification"
     );
 
     /**

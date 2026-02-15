@@ -60,9 +60,10 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    // Read the returnUrl from query parameters if present
+    // Read the returnUrl from query parameters if present.
+    // Only allow relative paths to prevent open redirect attacks.
     const urlParam = this.route.snapshot.queryParamMap.get('returnUrl');
-    if (urlParam) {
+    if (urlParam && urlParam.startsWith('/') && !urlParam.startsWith('//')) {
       this.returnUrl = urlParam;
     }
   }

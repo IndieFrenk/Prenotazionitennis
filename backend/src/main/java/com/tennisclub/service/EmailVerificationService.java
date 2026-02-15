@@ -10,11 +10,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,6 +32,7 @@ public class EmailVerificationService {
 
     private final EmailVerificationTokenRepository tokenRepository;
     private final UserRepository userRepository;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Value("${app.email.from:onboarding@resend.dev}")
     private String fromEmail;
@@ -152,11 +157,13 @@ public class EmailVerificationService {
         }
 
         try {
-            String jsonPayload = String.format("""
-                    {"from":"%s","to":["%s"],"subject":"Tennis Club - Conferma la tua email","text":"%s"}""",
-                    fromEmail,
-                    user.getEmail(),
-                    body.replace("\"", "\\\"").replace("\n", "\\n"));
+            Map<String, Object> payload = Map.of(
+                    "from", fromEmail,
+                    "to", List.of(user.getEmail()),
+                    "subject", "Tennis Club - Conferma la tua email",
+                    "text", body
+            );
+            String jsonPayload = objectMapper.writeValueAsString(payload);
 
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()

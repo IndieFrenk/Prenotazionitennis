@@ -8,7 +8,11 @@ RUN mvn clean package -DskipTests -B
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
-RUN mkdir -p /app/uploads
+RUN mkdir -p /app/uploads && \
+    addgroup --system appgroup && \
+    adduser --system --ingroup appgroup appuser && \
+    chown -R appuser:appgroup /app
+USER appuser
 EXPOSE 8080
 
 # Use production profile; Render injects PORT
